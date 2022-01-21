@@ -22,7 +22,7 @@ jobs:
 
     # install WASM-AOT
     - name: install WASM-AOT
-      run: dotnet workload install microsoft-net-sdk-blazorwebassembly-aot
+      run: dotnet workload install wasm-tools
 
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
