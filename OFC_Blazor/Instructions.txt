@@ -1,0 +1,2 @@
+﻿https://www.youtube.com/watch?v=nNxII6jvPvQ
+https://swimburger.net/blog/dotnet/how-to-deploy-aspnet-blazor-webassembly-to-github-pages

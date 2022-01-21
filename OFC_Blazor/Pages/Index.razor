@@ -1,0 +1,162 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>OFC Solver</PageTitle>
+
+<form>
+    <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="HeroFront">Hero Front</span>
+                </div>
+                <RadzenTextBox @bind-Value="HeroFront" aria-describedby="HeroFront" Placeholder="Hero Front" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="VillainFront">Villain Front</span>
+                </div>
+                <RadzenTextBox @bind-Value="VillainFront" aria-describedby="VillainFront" Placeholder="Villain Front" />
+            </div>
+        </div>
+    </div>
+
+        <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="HeroMiddle">Hero Middle</span>
+                </div>
+                <RadzenTextBox @bind-Value="HeroMiddle" aria-describedby="HeroMiddle" Placeholder="Hero Middle" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="VillainMiddle">Villain Middle</span>
+                </div>
+                <RadzenTextBox @bind-Value="VillainMiddle" aria-describedby="VillainMiddle" Placeholder="Villain Middle" />
+            </div>
+        </div>
+
+    </div>
+
+
+        <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="HeroBack">Hero Back</span>
+                </div>
+                <RadzenTextBox @bind-Value="HeroBack" aria-describedby="HeroBack" Placeholder="Hero Back" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="VillainBack">Villain Back</span>
+                </div>
+                <RadzenTextBox @bind-Value="VillainBack" aria-describedby="VillainBack" Placeholder="Villain Back" />
+            </div>
+        </div>
+
+    </div>
+
+        <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="HeroDraw">Hero Draw</span>
+                </div>
+                <RadzenTextBox @bind-Value="HeroDraw" aria-describedby="HeroDraw" Placeholder="Hero Draw" />
+            </div>
+        </div>
+        <div class="col">
+        </div>
+
+    </div>
+
+        <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="HeroFront">Hero Discards</span>
+                </div>
+                <RadzenTextBox @bind-Value="HeroDiscards" aria-describedby="HeroDiscards" Placeholder="Hero Discards" />
+            </div>
+        </div>
+        <div class="col">
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class=col>
+            <RadzenButton Click=@(args => Solve()) Text="Solve" Disabled=@IsBusy />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class=col>
+            <pre>@MoveInfo</pre>
+        </div>
+    </div>
+
+
+</form>
+
+@code {
+    private string HeroFront { get; set; }
+    private string HeroMiddle { get; set; }
+    private string HeroBack { get; set; }
+    private string HeroDraw { get; set; } = "4d 2d 8s 7s 5s";
+    private string HeroDiscards { get; set; }
+
+    private string VillainFront { get; set; }
+    private string VillainMiddle { get; set; }
+    private string VillainBack { get; set; }
+
+    private string MoveInfo { get; set; }
+    private bool IsBusy { get; set; }
+
+    private int ProcessorCount = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        ProcessorCount = Environment.ProcessorCount;
+        // https://eligrey.com/blog/cpu-core-estimation-with-javascript/
+        ProcessorCount = await JS.InvokeAsync<int>("eval", "window.navigator.hardwareConcurrency;");
+    }
+
+    async Task Solve()
+    {
+        MoveInfo = "";
+        IsBusy = true;
+        StateHasChanged();
+        await Task.Delay(1);
+        var results = OFCevaluator.Evaluate(
+                HeroFront,
+                HeroMiddle,
+                HeroBack,
+                HeroDiscards,
+                VillainFront,
+                VillainMiddle,
+                VillainBack,
+                "", // Villain discards
+                HeroDraw,
+                ProcessorCount
+                );
+
+        var topScore = results.FirstOrDefault().score;
+        results.ForEach(r =>
+        {
+            MoveInfo += $"{r.play} {Math.Round(r.score - topScore, 2)}{Environment.NewLine}";
+        });
+        IsBusy = false;
+        StateHasChanged(); 
+    }
+}
