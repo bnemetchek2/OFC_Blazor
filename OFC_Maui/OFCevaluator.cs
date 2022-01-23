@@ -22,7 +22,8 @@ public static class OFCevaluator
             int[] cardsRemaining,
             Random RNG,
             int[] AccumScores, // results for each play
-            int[] PlayCounts // number of times each play was evaluated
+            int[] PlayCounts, // number of times each play was evaluated
+            CancellationToken token
         )
     {
         // index for where the results will be accumulated
@@ -32,6 +33,8 @@ public static class OFCevaluator
 
         for (int i = 0; i < numThreadSamples; i++)
         {
+            if (token.IsCancellationRequested)
+                break;
             var resultsIdx = (index + i) % numPlays; // index for where the results will be accumulated
             var playIdx = resultsIdx * 13;
 
@@ -1081,8 +1084,8 @@ public static class OFCevaluator
         }
     }
 
-    public static List<(string play, double score)> Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount,
-        int numSimulations = 1000000)
+    public static List<(string play, double score)> Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount, CancellationToken token
+        )
     {
         try
         {
@@ -1093,6 +1096,7 @@ public static class OFCevaluator
 
             //var simulationsPerProcessor = numSimulations / ProcessorCount;
             //numSimulations = simulationsPerProcessor * ProcessorCount;
+            int numSimulations = int.MaxValue;
             var maxNumThreads = ProcessorCount;
             var numThreadSamples = numSimulations / maxNumThreads;
 
@@ -1246,7 +1250,8 @@ public static class OFCevaluator
                     remainingDeckI,
                     new Random(),
                     accumScores,
-                    playCounts
+                    playCounts,
+                    token
                     );
             });
             var EndTime = DateTime.Now;
@@ -1271,12 +1276,13 @@ public static class OFCevaluator
                 //.Take(20)
                 .ToList();
             var topScore = results.First().score;
+            var numSimulated = playCounts.Sum();
             results.ForEach(r =>
             {
                 Trace.WriteLine($"Play: {r.play} Score: {Math.Round(r.score, 2)}  Delta: {Math.Round(r.score - topScore, 2)}");
             });
             var duration = EndTime - startTime;
-            Trace.WriteLine($"Completed in {duration:ss}s {duration:ff}ms");
+            Trace.WriteLine($"Completed {numSimulated} monte carlo simulations in {duration:mm}m {duration:ss}s {duration:ff}ms");
             Trace.WriteLine($"===========================================");
 
             return results;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.WebView.Maui;
-using OFC_Maui.Data;
 
 namespace OFC_Maui
 {
@@ -17,7 +16,6 @@ namespace OFC_Maui
                 });
 
             builder.Services.AddBlazorWebView();
-            builder.Services.AddSingleton<WeatherForecastService>();
 
             return builder.Build();
         }
