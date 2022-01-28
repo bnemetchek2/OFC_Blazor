@@ -22,6 +22,7 @@ Global
 		{CAC3F58B-DB45-478B-A26D-5AC056BC0395}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{CAC3F58B-DB45-478B-A26D-5AC056BC0395}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAC3F58B-DB45-478B-A26D-5AC056BC0395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAC3F58B-DB45-478B-A26D-5AC056BC0395}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
