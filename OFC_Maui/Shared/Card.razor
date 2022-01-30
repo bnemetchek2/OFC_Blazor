@@ -1,0 +1,16 @@
+﻿<span class="draggable" draggable="true" title="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" style="height: 100%;">
+    <RadzenImage Path="@CardModel.ImagePath" Style=@Style class="img-responsive" />
+</span>
+@*<img src="@CardModel.ImagePath" style=@Style class="img-responsive" />*@
+
+@code {
+    [CascadingParameter] CardsContainer Container { get; set; }
+    [Parameter] public CardModel CardModel { get; set; }
+    [Parameter] public string Style { get; set; }
+
+    private void HandleDragStart(CardModel selectedCard)
+    {
+        if (Container != default)
+            Container.Payload = selectedCard;
+    }
+}

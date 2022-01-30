@@ -1,8 +1,64 @@
-﻿@*@page "/CardSelect/{OrderId}"*@
-@page "/CardSelect/"
+﻿@page "/CardSelect/"
 @inject Radzen.DialogService dialogService
+@inject Services.BrowserService BrowserService;
 
-<h3>CardSelect</h3>
+<div class="d-flex almostFullHeight"  >
+    <div class="row col-sm-6" >
+        <div class="d-flex" style="height: 20%">
+        @foreach (var card in FrontCards)
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style=""  />
+            </div>
+        }
+        </div>
+        <div class="d-flex" style="height: 20%">
+        @foreach (var card in FrontCards)
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;"  />
+            </div>
+        }
+        </div>
+        <div class="d-flex" style="height: 20%">
+        @foreach (var card in FrontCards)
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;"  />
+            </div>
+        }
+        </div>
+        <div class="d-flex" style="height: 20%">
+        @foreach (var card in FrontCards)
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;"  />
+            </div>
+        }
+        </div>
+        <div class="d-flex" style="height: 20%">
+        @foreach (var card in FrontCards)
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;"  />
+            </div>
+        }
+        </div>
+    </div>
+
+    <div class="row col-sm-6" >
+        <div class="d-flex" style="height: 20%">
+        @foreach (var card in FrontCards)
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;"  />
+            </div>
+        }
+        </div>
+    </div>
+</div>
+
+
 
 <div class="row">
     <div class="col-md-12 text-right">
@@ -12,11 +68,23 @@
 </div>
 
 @code {
-     [Parameter] public List<int> CardInts { get; set; }
-     //[Parameter] public int OrderID { get; set; }
+    [Parameter] public List<int> FrontInts { get; set; }
+    //[Parameter] public List<int> MiddleInts { get; set; }
+    //[Parameter] public List<int> BackInts { get; set; }
+    //[Parameter] public List<int> DrawInts { get; set; }
+    //[Parameter] public List<int> DiscardInts { get; set; }
 
-     protected override void OnInitialized()
+    List<CardModel> FrontCards = new List<CardModel>();
+    List<CardModel> MiddleCards = new List<CardModel>();
+    List<CardModel> BackCards = new List<CardModel>();
+    List<CardModel> DrawCards = new List<CardModel>();
+    List<CardModel> DiscardCards = new List<CardModel>();
+    protected override void OnInitialized()
     {
-        
+        FrontInts.ForEach(i => FrontCards.Add(new CardModel(i)));
+        //MiddleInts.ForEach(i => MiddleCards.Add(new CardModel(i)));
+        //BackInts.ForEach(i => BackCards.Add(new CardModel(i)));
+        //DrawInts.ForEach(i => DrawCards.Add(new CardModel(i)));
+        //DiscardInts.ForEach(i => DiscardCards.Add(new CardModel(i)));
     }
 }

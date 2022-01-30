@@ -7,6 +7,7 @@
 	<base href="/" />
 	<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
 	<link href="css/app.css" rel="stylesheet" />
+	<link href="css/mobile-drag-drop.css" rel="stylesheet" />
 	<link href="OFC_Maui.styles.css" rel="stylesheet" />
 	<link rel="stylesheet" href="_content/Radzen.Blazor/css/dark.css">
 </head>
@@ -23,6 +24,15 @@
 
 	<script src="_framework/blazor.webview.js" autostart="false"></script>
 	<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+	<script src="script/mobile-drag-drop.js"></script>
+	<script>
+		// https://github.com/Postlagerkarte/blazor-dragdrop#mobile-devices
+		// options are optional ;)
+		MobileDragDrop.polyfill({
+			// use this to make use of the scroll behaviour
+			dragImageTranslateOverride: MobileDragDrop.scrollBehaviourDragImageTranslateOverride
+		});
+	</script>
 </body>
 
 </html>

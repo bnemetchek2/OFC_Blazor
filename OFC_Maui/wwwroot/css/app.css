@@ -62,3 +62,66 @@ a, .btn-link {
 	.blazor-error-boundary::after {
 		content: "An error has occurred."
 	}
+
+/** Simple drag and drop with Blazor CSS **/
+
+.cards-container {
+	display: flex;
+	justify-content: space-around;
+}
+
+.card-status {
+	display: flex;
+	flex-direction: column;
+	width: 312px;
+}
+
+	.job-status ul {
+		flex: 1;
+	}
+
+.dropzone {
+	padding: 30px;
+	border: 1px dashed #75868a;
+	list-style: none;
+}
+
+.no-drop {
+	border: 2px dashed red;
+}
+
+.can-drop {
+	border: 2px dashed green;
+}
+
+.draggable {
+	display: inline-block;
+	margin-bottom: 1px;
+	padding: 2px 2px;
+	/*border: 5px solid #424d5c;*/
+	cursor: grab;
+	/*background: #5c6b7f;*/
+	color: #ffffff;
+	border-radius: 2px;
+	/*width: 250px;*/
+}
+
+	.draggable img {
+		object-fit: cover;
+		object-position: top;
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+.draggable:active {
+	cursor: grabbing;
+}
+
+.dragging {
+	cursor: grabbing;
+}
+
+.almostFullHeight {
+	height: calc(100% - 35px);
+}

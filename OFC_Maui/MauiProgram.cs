@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.WebView.Maui;
+using OFC_Maui.Services;
 using Radzen;
 
 namespace OFC_Maui
@@ -22,6 +23,7 @@ namespace OFC_Maui
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddScoped<ContextMenuService>();
+            builder.Services.AddScoped<BrowserService>();
 
             return builder.Build();
         }
