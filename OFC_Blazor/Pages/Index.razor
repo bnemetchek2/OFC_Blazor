@@ -1,5 +1,7 @@
 ﻿@page "/"
-@inject IJSRuntime JS
+@using OFC_Blazor
+@inject DialogService DialogService
+@inject Services.BrowserService BrowserService;
 
 <PageTitle>OFC Solver</PageTitle>
 
@@ -71,6 +73,7 @@
                     <span class="input-group-text" id="HeroDraw">Hero Draw</span>
                 </div>
                 <RadzenTextBox @bind-Value="HeroDraw" aria-describedby="HeroDraw" Placeholder="Hero Draw" />
+                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Secondary" Click=@OpenCardSelect />
             </div>
         </div>
         <div class="col">
@@ -88,13 +91,20 @@
             </div>
         </div>
         <div class="col">
+              <h4 class="mb-4">@TimeoutSeconds seconds</h4>
+                <RadzenSlider @bind-Value=@TimeoutSeconds TValue="int" Min="5" Max="100" Change=@(args => OnSliderChange(args, "Slider from 5 to 100")) />
         </div>
 
     </div>
 
     <div class="row">
         <div class=col>
-            <RadzenButton Click=@(args => Solve()) Text="Solve" Disabled=@IsBusy />
+            <RadzenButton Click=@(args => Solve()) Text="Solve" BusyText="Working ..." IsBusy=@IsBusy />
+            <div>
+            </div>
+        </div>
+        <div class="col">
+            
         </div>
     </div>
 
@@ -104,10 +114,15 @@
         </div>
     </div>
 
+    <div class="row">
+        <RadzenProgressBar Visible=@IsBusy Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    </div>
 
 </form>
 
 @code {
+    // https://fonts.google.com/icons?selected=Material+Icons
+
     private string HeroFront { get; set; }
     private string HeroMiddle { get; set; }
     private string HeroBack { get; set; }
@@ -122,14 +137,14 @@
     private bool IsBusy { get; set; }
 
     private int ProcessorCount = 1;
+    private int TimeoutSeconds = 10;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        ProcessorCount = Environment.ProcessorCount;
-        // https://eligrey.com/blog/cpu-core-estimation-with-javascript/
-        ProcessorCount = await JS.InvokeAsync<int>("eval", "window.navigator.hardwareConcurrency;");
+        ProcessorCount = await BrowserService.GetProcessorCount();
+        var dim = await BrowserService.GetWindowDimensions();
     }
 
     async Task Solve()
@@ -137,26 +152,49 @@
         MoveInfo = "";
         IsBusy = true;
         StateHasChanged();
-        await Task.Delay(1);
-        var results = OFCevaluator.Evaluate(
-                HeroFront,
-                HeroMiddle,
-                HeroBack,
-                HeroDiscards,
-                VillainFront,
-                VillainMiddle,
-                VillainBack,
-                "", // Villain discards
-                HeroDraw,
-                ProcessorCount
-                );
+        var _ = Task.Run(() => {
+            try
+            {
+                var s_cts = new CancellationTokenSource(1000 * TimeoutSeconds);
+                var results = OFCevaluator.Evaluate(
+                        HeroFront,
+                        HeroMiddle,
+                        HeroBack,
+                        HeroDiscards,
+                        VillainFront,
+                        VillainMiddle,
+                        VillainBack,
+                        "", // Villain discards
+                        HeroDraw,
+                        ProcessorCount,
+                        s_cts.Token
+                        );
 
-        var topScore = results.FirstOrDefault().score;
-        results.ForEach(r =>
-        {
-            MoveInfo += $"{r.play} {Math.Round(r.score - topScore, 2)}{Environment.NewLine}";
-        });
-        IsBusy = false;
-        StateHasChanged(); 
+                MoveInfo = results.Summary;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                IsBusy = false;
+                var _ = InvokeAsync(StateHasChanged);
+            }
+    });
+    }
+
+    void OnSliderChange(dynamic value, string name)
+    {
+        //var str = value is IEnumerable ? string.Join(", ", value) : value;
+        //console.Log($"{name} value changed to {str}");
+    }
+
+    public async Task OpenCardSelect()
+    {
+        await DialogService.OpenAsync<CardSelect>("Select Cards",
+               new Dictionary<string, object>() { { "FrontInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroDraw).ToList() } },
+               new DialogOptions() { Width = "100vw", Height = "100vh", ShowTitle=true, ShowClose=true });
+
     }
 }

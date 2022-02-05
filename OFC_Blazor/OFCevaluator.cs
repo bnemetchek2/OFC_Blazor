@@ -22,7 +22,8 @@ public static class OFCevaluator
             int[] cardsRemaining,
             Random RNG,
             int[] AccumScores, // results for each play
-            int[] PlayCounts // number of times each play was evaluated
+            int[] PlayCounts, // number of times each play was evaluated
+            CancellationToken token
         )
     {
         // index for where the results will be accumulated
@@ -32,6 +33,8 @@ public static class OFCevaluator
 
         for (int i = 0; i < numThreadSamples; i++)
         {
+            if (token.IsCancellationRequested)
+                break;
             var resultsIdx = (index + i) % numPlays; // index for where the results will be accumulated
             var playIdx = resultsIdx * 13;
 
@@ -124,7 +127,6 @@ public static class OFCevaluator
 
     // returns HighScorePlay
     static int FantasyKernel(
-        int numCalls,
         List<int> cards
         )
     {
@@ -1081,8 +1083,8 @@ public static class OFCevaluator
         }
     }
 
-    public static List<(string play, double score)> Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount,
-        int numSimulations = 1000000)
+    public static (string Summary, List<(string play, double score)> Plays) Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount, CancellationToken token
+        )
     {
         try
         {
@@ -1090,9 +1092,11 @@ public static class OFCevaluator
             // debug
             //numSimulations = 1;
             // test git
+            var emptyPlays = new List<(string play, double score)>();
 
             //var simulationsPerProcessor = numSimulations / ProcessorCount;
             //numSimulations = simulationsPerProcessor * ProcessorCount;
+            int numSimulations = int.MaxValue;
             var maxNumThreads = ProcessorCount;
             var numThreadSamples = numSimulations / maxNumThreads;
 
@@ -1116,51 +1120,36 @@ public static class OFCevaluator
                 var p2DiscardsInts = FixEmptyInts(SolverHelper.CardsToInts(p2Discards));
                 var p1DrawInts = FixEmptyInts(SolverHelper.CardsToInts(p1Draw));
 
+                // check if fantasy
+                if (p1DrawInts.Length == 14)
+                {
+                    var fant = EvaluateFantasy(p1Draw);
+                    return (fant.play, emptyPlays);
+                }
 
                 if (p1FrontInts.Length > 3)
-                    return new List<(string play, double score)>(){
-                        ($"Hero Front has {p1FrontInts.Length} cards",0)
-                    };
+                    return ($"Hero Front has {p1FrontInts.Length} cards", emptyPlays);
                 if (p1MiddleInts.Length > 5)
-                    return new List<(string play, double score)>(){
-                        ($"Hero Middle has {p1MiddleInts.Length} cards",0)
-                    };
+                    return ($"Hero Middle has {p1MiddleInts.Length} cards", emptyPlays);
                 if (p1BackInts.Length > 5)
-                    return new List<(string play, double score)>(){
-                        ($"Hero Back has {p1BackInts.Length} cards",0)
-                    };
+                    return ($"Hero Back has {p1BackInts.Length} cards", emptyPlays);
                 if (!isInital && p1DrawInts.Length != 3)
-                    return new List<(string play, double score)>(){
-                        ($"Hero Draw has {p1DrawInts.Length} cards",0)
-                    };
+                    return ($"Hero Draw has {p1DrawInts.Length} cards", emptyPlays);
                 var p1SetCardCount = p1FrontInts.Length + p1MiddleInts.Length + p1BackInts.Length;
                 if (p1SetCardCount != 0 && p1SetCardCount % 2 != 1)
-                    return new List<(string play, double score)>(){
-                        ($"Hero has invalid # of set cards: {p1SetCardCount}",0)
-                    };
-
+                    return ($"Hero has invalid # of set cards: {p1SetCardCount}", emptyPlays);
                 if (p2FrontInts.Length > 3)
-                    return new List<(string play, double score)>(){
-                        ($"Villain 1 Front has {p2FrontInts.Length} cards",0)
-                    };
+                    return ($"Villain 1 Front has {p2FrontInts.Length} cards", emptyPlays);
                 if (p2MiddleInts.Length > 5)
-                    return new List<(string play, double score)>(){
-                        ($"Villain 1 Middle has {p2MiddleInts.Length} cards",0)
-                    };
+                    return ($"Villain 1 Middle has {p2MiddleInts.Length} cards", emptyPlays);
                 if (p2BackInts.Length > 5)
-                    return new List<(string play, double score)>(){
-                        ($"Villain 1 Back has {p2BackInts.Length} cards",0)
-                    };
+                    return ($"Villain 1 Back has {p2BackInts.Length} cards", emptyPlays);
                 var p2SetCardCount = p2FrontInts.Length + p2MiddleInts.Length + p2BackInts.Length;
                 if (p2SetCardCount != 0 && p2SetCardCount % 2 != 1)
-                    return new List<(string play, double score)>(){
-                        ($"Villain 1 has invalid # of set cards: {p2SetCardCount}",0)
-                    };
+                    return ($"Villain 1 has invalid # of set cards: {p2SetCardCount}", emptyPlays);
 
                 if (p1SetCardCount != 0 && p2SetCardCount != 0 && Math.Abs(p1SetCardCount - p2SetCardCount) > 2)
-                    return new List<(string play, double score)>(){
-                        ($"Players have not played in turn",0)
-                    };
+                    return ($"Players have not played in turn", emptyPlays);
             }
             #endregion
 
@@ -1182,9 +1171,7 @@ public static class OFCevaluator
             var validPlays = SolverHelper.FlattenPlays(isInital, possiblePlays);
             if (validPlays.Length == 0)
             {
-                return new List<(string play, double score)>(){
-                        ("???",0)
-                    };
+                return ("???", emptyPlays);
             }
 
             var remainingDeck = SolverHelper.RemoveCards(SolverHelper.GetFullDeck(), p1Front + p1Middle + p1Back + p1Discards + p1Draw + p2Front + p2Middle + p2Back + p2Discards);
@@ -1246,7 +1233,8 @@ public static class OFCevaluator
                     remainingDeckI,
                     new Random(),
                     accumScores,
-                    playCounts
+                    playCounts,
+                    token
                     );
             });
             var EndTime = DateTime.Now;
@@ -1271,15 +1259,21 @@ public static class OFCevaluator
                 //.Take(20)
                 .ToList();
             var topScore = results.First().score;
+            var numSimulated = playCounts.Sum();
+            var duration = EndTime - startTime;
+            var summary = string.Empty;
+            summary += $"Completed {numSimulated} monte carlo simulations in {duration:mm}m {duration:ss}s {duration:ff}ms" + Environment.NewLine;
+            summary += $"===========================================" + Environment.NewLine;
+
             results.ForEach(r =>
             {
-                Trace.WriteLine($"Play: {r.play} Score: {Math.Round(r.score, 2)}  Delta: {Math.Round(r.score - topScore, 2)}");
+                //summary +=$"Play: {r.play} Score: {Math.Round(r.score, 2)}  Delta: {Math.Round(r.score - topScore, 2)}";
+                summary += $"{r.play} {Math.Round(r.score - topScore, 2)}{Environment.NewLine}";
             });
-            var duration = EndTime - startTime;
-            Trace.WriteLine($"Completed in {duration:ss}s {duration:ff}ms");
-            Trace.WriteLine($"===========================================");
 
-            return results;
+            Trace.WriteLine(summary);
+
+            return (summary, results);
         }
         catch (Exception ex)
         {
@@ -1296,33 +1290,46 @@ public static class OFCevaluator
             var cardInts = SolverHelper.CardsToInts(cards);
             if (cardInts.Length != 14)
                 throw new Exception($"Card count must be 14.  {cardInts.Length} found");
-            var numCalls = (1 << 28) - 1;
             var startTime = DateTime.Now;
-            var topPlay = FantasyKernel(numCalls, cardInts.ToList());
+            var topPlay = FantasyKernel(cardInts.ToList());
             var EndTime = DateTime.Now;
             var bestHand = new Hand(topPlay, cardInts.ToList());
+            bestHand.ComputeBonus();
 
             var displayResult = string.Empty;
+            var duration = EndTime - startTime;
+            displayResult += $"Fantasy calculated in {duration:ss}s {duration:ff}ms" + Environment.NewLine;
+            displayResult += $"===========================================" + Environment.NewLine;
+
             for (int i = 0; i < 3; i++)
             {
                 displayResult += SolverHelper.IntToCard(bestHand.hand0.Cards[i]) + " ";
             }
-            displayResult += Environment.NewLine;
+            displayResult += $"        {bestHand.bonus[0]}" + Environment.NewLine;
             for (int i = 0; i < 5; i++)
             {
                 displayResult += SolverHelper.IntToCard(bestHand.hand1.Cards[i]) + " ";
             }
-            displayResult += Environment.NewLine;
+            displayResult += $"  {bestHand.bonus[1]}" + Environment.NewLine;
             for (int i = 0; i < 5; i++)
             {
                 displayResult += SolverHelper.IntToCard(bestHand.hand2.Cards[i]) + " ";
             }
+            displayResult += $"  {bestHand.bonus[2]}" + Environment.NewLine;
+
+            var royalties = bestHand.IsHandComplete() && !bestHand.IsFoul() ? bestHand.bonus[0] + bestHand.bonus[1] + bestHand.bonus[2] : 0;
+            displayResult += $"Royalties: {royalties}" + Environment.NewLine;
+
+            // calculate discards
+            var discards = cardInts.ToList();
+            var hand0List = bestHand.hand0.Cards.ToList();
+            var hand1List = bestHand.hand1.Cards.ToList();
+            var hand2List = bestHand.hand2.Cards.ToList();
+            discards.RemoveAll(v => hand0List.Contains(v) || hand1List.Contains(v) || hand2List.Contains(v));
+            displayResult += $"Discard: {SolverHelper.IntsToCard(discards)}" + Environment.NewLine;
+
             Trace.WriteLine(displayResult);
-            var duration = EndTime - startTime;
-            Trace.WriteLine($"Completed in {duration:ss}s {duration:ff}ms");
-            Trace.WriteLine($"===========================================");
-            bestHand.ComputeBonus();
-            var royalties = bestHand.IsHandComplete() && bestHand.IsFoul() ? bestHand.bonus[0] + bestHand.bonus[1] + bestHand.bonus[2] : 0;
+
             return (displayResult, royalties);
         }
         catch (Exception ex)
@@ -1922,6 +1929,8 @@ public static class OFCevaluator
 
         public static string IntToCard(int cardInt)
         {
+            if (cardInt <= 0)
+                return "";
             var rank = "0123456789TJQKA".Substring(GetRank(cardInt), 1);
             var suit = "SHDC".Substring(GetSuit(cardInt), 1);
             return rank + suit;

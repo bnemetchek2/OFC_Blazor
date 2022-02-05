@@ -1,0 +1,61 @@
+﻿<div class="card-status">
+    <h3>@ListCardPlacement (@cards.Count())</h3>
+
+    <ul class="dropzone @dropClass"
+        ondragover="event.preventDefault();"
+        ondragstart="event.dataTransfer.setData('', event.target.id);"
+        @ondrop="HandleDrop"
+        @ondragenter="HandleDragEnter"
+        @ondragleave="HandleDragLeave">
+
+        @foreach (var card in cards)
+        {
+            <card cardModel="card" />
+        }
+
+    </ul>
+</div>
+
+@code {
+
+    [CascadingParameter] CardsContainer Container { get; set; }
+    [Parameter] public CardPlacement ListCardPlacement { get; set; }
+    [Parameter] public List<CardPlacement> AllowedCardPlacements { get; set; }
+
+    List<CardModel> cards = new List<CardModel>();
+    string dropClass = "";
+
+    protected override void OnParametersSet()
+    {
+        cards.Clear();
+        cards.AddRange(Container.cards.Where(x => x.CardPlacement == ListCardPlacement));
+    }
+
+    private void HandleDragEnter()
+    {
+        if (ListCardPlacement == Container.Payload.CardPlacement) return;
+
+        if (AllowedCardPlacements != null && !AllowedCardPlacements.Contains(Container.Payload.CardPlacement))
+        {
+            dropClass = "no-drop";
+        }
+        else
+        {
+            dropClass = "can-drop";
+        }
+    }
+
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+
+    private async Task HandleDrop()
+    {
+        dropClass = "";
+
+        if (AllowedCardPlacements != null && !AllowedCardPlacements.Contains(Container.Payload.CardPlacement)) return;
+
+        await Container.UpdatecardAsync(ListCardPlacement);
+    }
+}

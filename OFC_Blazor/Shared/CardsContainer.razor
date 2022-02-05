@@ -1,0 +1,24 @@
+﻿<div class="cards-container">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    [Parameter] public List<CardModel> cards { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<CardModel> OnStatusUpdated { get; set; }
+
+    public CardModel Payload { get; set; }
+
+    public async Task UpdatecardAsync(CardPlacement newCardPlacement)
+    {
+        var task = cards.SingleOrDefault(x => x.IntVal == Payload.IntVal);
+
+        if (task != null)
+        {
+            task.CardPlacement = newCardPlacement;
+            await OnStatusUpdated.InvokeAsync(Payload);
+        }
+    }
+}
