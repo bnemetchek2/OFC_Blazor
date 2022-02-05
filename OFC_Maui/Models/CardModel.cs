@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 namespace OFC_Maui.Models;
 
 public class CardModel
@@ -18,6 +19,15 @@ public class CardModel
     {
         get
         {
+            if (IntVal == 1)
+            {
+                // https://commons.wikimedia.org/wiki/Category:SVG_playing_cards
+                return $"cards/Card_back_06.svg";
+            }
+            else if (IntVal <= 0)
+            {
+                return $"cards/EmptyCard.svg";
+            }
             var name = CardName;
             var ordinanName = name[0].ToString().ToUpper() switch
             {
@@ -54,5 +64,6 @@ public enum CardPlacement
     Back,
     Draw,
     Discard,
-    Available
+    Available,
+    Deck
 }

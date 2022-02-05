@@ -2,7 +2,7 @@
 @inject Radzen.DialogService dialogService
 @inject Services.BrowserService BrowserService;
 
-<div class="d-flex almostFullHeight"  >
+<div class="d-flex almostFullHeight" >
     <div class="row col-sm-6" >
         <div class="d-flex" style="height: 20%">
         @foreach (var card in FrontCards)
@@ -47,14 +47,49 @@
     </div>
 
     <div class="row col-sm-6" >
-        <div class="d-flex" style="height: 20%">
-        @foreach (var card in FrontCards)
+        <RadzenTabs style="height: 100%; width: 100%;" RenderMode="TabRenderMode.Client" >
+            <Tabs>
+                <RadzenTabsItem Text="♤ Spades">
+                    <div class="d-flex" style="height: 100%;">
+                        <div class="row col-sm-12">
+        <div class="d-flex" style="height: 33%">
+        @foreach (var card in SpadeCards.Skip(0).Take(5))
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
         </div>
+        <div class="d-flex" style="height: 33%">
+        @foreach (var card in SpadeCards.Skip(5).Take(5))
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;"  />
+            </div>
+        }
+        </div>
+        <div class="d-flex" style="height: 33%">
+        @foreach (var card in SpadeCards.Skip(10).Take(3))
+        {
+            <div class="" style="width:20%;">
+            <Card CardModel="card" Style="width: 100%;" />
+            </div>
+        }
+        <div class="" style="width:20%;">
+            <Card CardModel="BackCard" Style="width: 100%;"  />
+            </div>
+        </div>
+        </div>
+        </div>
+        </RadzenTabsItem>
+        <RadzenTabsItem  Text="♡ Hearts">
+        </RadzenTabsItem>
+        <RadzenTabsItem  Text="♧ Clubs">
+        </RadzenTabsItem>
+        <RadzenTabsItem  Text="♢ Diamonds">
+        </RadzenTabsItem>
+        </Tabs>
+        </RadzenTabs>
     </div>
 </div>
 
@@ -79,6 +114,14 @@
     List<CardModel> BackCards = new List<CardModel>();
     List<CardModel> DrawCards = new List<CardModel>();
     List<CardModel> DiscardCards = new List<CardModel>();
+
+    List<CardModel> SpadeCards = new List<CardModel>();
+    List<CardModel> HeartCards = new List<CardModel>();
+    List<CardModel> ClubCards = new List<CardModel>();
+    List<CardModel> DiamondCards = new List<CardModel>();
+    CardModel BackCard = new CardModel(-1);
+    CardModel EmptyCard = new CardModel(0);
+
     protected override void OnInitialized()
     {
         FrontInts.ForEach(i => FrontCards.Add(new CardModel(i)));
@@ -86,5 +129,10 @@
         //BackInts.ForEach(i => BackCards.Add(new CardModel(i)));
         //DrawInts.ForEach(i => DrawCards.Add(new CardModel(i)));
         //DiscardInts.ForEach(i => DiscardCards.Add(new CardModel(i)));
+
+        OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts("2s 3s 4s 5s 6s 7s 8s 9s Ts Js Qs Ks As").ToList().ForEach(i => SpadeCards.Add(new CardModel(i)));
+        OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts("2h 3h 4h 5h 6h 7h 8h 9h Th Jh Qh Kh Ah").ToList().ForEach(i => HeartCards.Add(new CardModel(i)));
+        OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts("2c 3c 4c 5c 6c 7c 8c 9c Tc Jc Qc Kc Ac").ToList().ForEach(i => ClubCards.Add(new CardModel(i)));
+        OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts("2d 3d 4d 5d 6d 7d 8d 9d Td Jd Qd Kd Ad").ToList().ForEach(i => DiamondCards.Add(new CardModel(i)));
     }
 }

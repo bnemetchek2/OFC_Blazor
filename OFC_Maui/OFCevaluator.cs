@@ -1929,6 +1929,8 @@ public static class OFCevaluator
 
         public static string IntToCard(int cardInt)
         {
+            if (cardInt <= 0)
+                return "";
             var rank = "0123456789TJQKA".Substring(GetRank(cardInt), 1);
             var suit = "SHDC".Substring(GetSuit(cardInt), 1);
             return rank + suit;

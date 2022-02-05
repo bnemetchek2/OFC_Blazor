@@ -107,7 +107,7 @@ a, .btn-link {
 }
 
 	.draggable img {
-		object-fit: cover;
+		object-fit: contain;
 		object-position: top;
 		display: block;
 		height: 100%;
@@ -123,5 +123,9 @@ a, .btn-link {
 }
 
 .almostFullHeight {
-	height: calc(100% - 35px);
+	height: calc(100% - 38px);
+}
+
+.rz-tabview-panel {
+	height: 100%;
 }
