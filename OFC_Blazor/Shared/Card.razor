@@ -1,4 +1,4 @@
-﻿<span class="draggable" draggable="true" title="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" style="height: 100%;">
+﻿<span class="draggable" draggable="true" id="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" >
     <RadzenImage Path="@CardModel.ImagePath" Style=@Style class="img-responsive" />
 </span>
 @*<img src="@CardModel.ImagePath" style=@Style class="img-responsive" />*@

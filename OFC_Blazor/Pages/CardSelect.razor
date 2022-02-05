@@ -52,41 +52,18 @@
                 <RadzenTabsItem Text="♤ Spades">
                     <div class="d-flex" style="height: 100%;">
                         <div class="row col-sm-12">
-        <div class="d-flex" style="height: 33%">
-        @foreach (var card in SpadeCards.Skip(0).Take(5))
-        {
-            <div class="" style="width:20%;">
-            <Card CardModel="card" Style="width: 100%;"  />
-            </div>
-        }
-        </div>
-        <div class="d-flex" style="height: 33%">
-        @foreach (var card in SpadeCards.Skip(5).Take(5))
-        {
-            <div class="" style="width:20%;">
-            <Card CardModel="card" Style="width: 100%;"  />
-            </div>
-        }
-        </div>
-        <div class="d-flex" style="height: 33%">
-        @foreach (var card in SpadeCards.Skip(10).Take(3))
-        {
-            <div class="" style="width:20%;">
-            <Card CardModel="card" Style="width: 100%;" />
-            </div>
-        }
-        <div class="" style="width:20%;">
-            <Card CardModel="BackCard" Style="width: 100%;"  />
-            </div>
-        </div>
-        </div>
-        </div>
+                            <FullSuitCards Suit="S" />
+                        </div>
+                    </div>
+                </RadzenTabsItem>
+        <RadzenTabsItem Text="♡ Hearts">
+            <FullSuitCards Suit="H" />
         </RadzenTabsItem>
-        <RadzenTabsItem  Text="♡ Hearts">
+        <RadzenTabsItem Text="♧ Clubs">
+            <FullSuitCards Suit="C" />
         </RadzenTabsItem>
-        <RadzenTabsItem  Text="♧ Clubs">
-        </RadzenTabsItem>
-        <RadzenTabsItem  Text="♢ Diamonds">
+        <RadzenTabsItem Text="♢ Diamonds">
+            <FullSuitCards Suit="D" />
         </RadzenTabsItem>
         </Tabs>
         </RadzenTabs>
