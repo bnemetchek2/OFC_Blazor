@@ -1,6 +1,15 @@
-﻿<span class="card draggable" id="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" >
-    <RadzenImage Path="@CardModel.ImagePath" Style=@Style class="img-responsive" />
-</span>
+﻿@if (CardModel.IntVal > 0)
+{
+    <span class="card draggable" id="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" >
+        <RadzenImage Path="@CardModel.ImagePath" Style=@Style class="img-responsive" />
+    </span>
+}
+else
+{
+    <span class="empty-card">
+
+    </span>
+}
 
 @code {
     [CascadingParameter] CardsContainer Container { get; set; }

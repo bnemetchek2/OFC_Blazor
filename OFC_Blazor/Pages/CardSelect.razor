@@ -5,14 +5,13 @@
 <div class="d-flex almostFullHeight" >
     <div class="row col-sm-6" >
         <div class="d-flex" style="height: 20%">
-            <div class="empty-card" style="width:20%;"></div>
+            <div class="no-card" style="width:20%;"></div>
         @foreach (var card in FrontCards)
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
-        <div class="empty-card" style="width:20%;"></div>
         </div>
         <div class="d-flex" style="height: 20%">
         @foreach (var card in MiddleCards)
@@ -96,10 +95,20 @@
     protected override void OnInitialized()
     {
         FrontInts.Where(i => i > 0).ToList().ForEach(i => FrontCards.Add(new CardModel(i)));
+        while (FrontCards.Count < 3)
+            FrontCards.Add(new CardModel(0));
         MiddleInts.Where(i => i > 0).ToList().ForEach(i => MiddleCards.Add(new CardModel(i)));
+        while (MiddleCards.Count < 5)
+            MiddleCards.Add(new CardModel(0));
         BackInts.Where(i => i > 0).ToList().ForEach(i => BackCards.Add(new CardModel(i)));
+        while (BackCards.Count < 5)
+            BackCards.Add(new CardModel(0));
         DrawInts.Where(i => i > 0).ToList().ForEach(i => DrawCards.Add(new CardModel(i)));
+        while (DrawCards.Count < 3)
+            DrawCards.Add(new CardModel(0));
         DiscardInts.Where(i => i > 0).ToList().ForEach(i => DiscardCards.Add(new CardModel(i)));
+        while (DiscardCards.Count < 4)
+            DiscardCards.Add(new CardModel(0));
 
     }
 }

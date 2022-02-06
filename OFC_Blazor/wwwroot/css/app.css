@@ -86,6 +86,12 @@ a, .btn-link {
 
 .empty-card {
     border: 2px dashed green;
+    display: block;
+    height: 100%;
+}
+
+.no-card {
+    
 }
 
 .cards-container {
