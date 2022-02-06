@@ -1,13 +1,16 @@
 ﻿@if (CardModel.IntVal > 0)
 {
-    <span class="card draggable" id="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" >
-        <RadzenImage Path="@CardModel.ImagePath" Style=@Style class="img-responsive" />
+    <span class="card @draggableClass" id="@CardModel.CardName" AllowDragging=false @ondragstart="@((eventArgs) => HandleDragStart(eventArgs, CardModel))" >
+        <img src="@CardModel.ImagePath" style=@Style class="img-responsive disabled-image" draggable="@allowDragging" />
     </span>
 }
 else
 {
-    <span class="empty-card">
-
+    <span class="empty-card-container">
+    <span class="empty-card dropzone @dropClass" ondragover="event.preventDefault();" @ondrop="HandleDrop"
+        @ondragenter="HandleDragEnter"
+        @ondragleave="HandleDragLeave">
+    </span>
     </span>
 }
 
@@ -15,10 +18,68 @@ else
     [CascadingParameter] CardsContainer Container { get; set; }
     [Parameter] public CardModel CardModel { get; set; }
     [Parameter] public string Style { get; set; }
+    string dropClass = "";
+    private string allowDragging => (CardModel?.Draggable ?? false) ? "true" : "false";
+    private string draggableClass => (CardModel?.Draggable ?? false) ? "draggable" : string.Empty;
 
-    private void HandleDragStart(CardModel selectedCard)
+    private bool HandleDragStart(DragEventArgs eventArgs, CardModel selectedCard)
     {
-        if (Container != default)
-            Container.Payload = selectedCard;
+
+        if (!CardModel.Draggable)
+            return false;
+        CardsContainer.Payload = selectedCard;
+        return true;
+    }
+
+
+
+    //private void AllowDragOver(UIDragEventArgs e)
+    //{
+
+    //}
+
+    private void HandleDragEnter()
+    {
+        dropClass = "can-drop";
+        //if (ListStatus == Container.Payload.Status) return;
+
+        //if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status))
+        //{
+        //    dropClass = "no-drop";
+        //}
+        //else
+        //{
+        //    dropClass = "can-drop";
+        //}
+    }
+
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+
+    private async Task HandleDrop()
+    {
+        dropClass = "";
+        if (Container?.cards != default && CardsContainer.Payload != default)
+        {
+            for (int i = 0; i < Container.cards.Count; i++){
+                if (Container.cards[i].IntVal == 0)
+                {
+                    try
+                    {
+                        var newCard = new CardModel(CardsContainer.Payload.IntVal);
+                        Container.cards[i] = newCard;
+                        await Container.OnCardsUpdated.InvokeAsync((newCard, Container.cards));
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    break;
+                }
+            }
+        }
+        CardsContainer.Payload = null;
     }
 }

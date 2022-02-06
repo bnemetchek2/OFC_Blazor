@@ -79,15 +79,31 @@ a, .btn-link {
     margin-right: auto;
 }
 
+.disabled-image {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
 .fullsuit-container {
     /*height:100%;*/
     display:block;
 }
 
 .empty-card {
-    border: 2px dashed green;
+    border: 2px white;
     display: block;
+    height: 95%;
+    width: 95%;
+}
+
+.empty-card-container {
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .no-card {
@@ -111,6 +127,7 @@ a, .btn-link {
 
 .can-drop {
     border: 2px dashed green;
+    background-color: gray;
 }
 
 .draggable {

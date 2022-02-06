@@ -33,9 +33,9 @@
 
     private void HandleDragEnter()
     {
-        if (ListCardPlacement == Container.Payload.CardPlacement) return;
+        if (ListCardPlacement == CardsContainer.Payload.CardPlacement) return;
 
-        if (AllowedCardPlacements != null && !AllowedCardPlacements.Contains(Container.Payload.CardPlacement))
+        if (AllowedCardPlacements != null && !AllowedCardPlacements.Contains(CardsContainer.Payload.CardPlacement))
         {
             dropClass = "no-drop";
         }
@@ -54,7 +54,7 @@
     {
         dropClass = "";
 
-        if (AllowedCardPlacements != null && !AllowedCardPlacements.Contains(Container.Payload.CardPlacement)) return;
+        if (AllowedCardPlacements != null && !AllowedCardPlacements.Contains(CardsContainer.Payload.CardPlacement)) return;
 
         await Container.UpdatecardAsync(ListCardPlacement);
     }

@@ -1,49 +1,60 @@
 ﻿@page "/CardSelect/"
 @inject Radzen.DialogService dialogService
 @inject Services.BrowserService BrowserService;
+@*implements IDisposable*@
 
 <div class="d-flex almostFullHeight" >
     <div class="row col-sm-6" >
         <div class="d-flex" style="height: 20%">
             <div class="no-card" style="width:20%;"></div>
+            <CardsContainer cards=@FrontCards @ref=@FrontCardsContainer OnCardsUpdated="HandleCardsUpdated">
         @foreach (var card in FrontCards)
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
+        </CardsContainer>
         </div>
         <div class="d-flex" style="height: 20%">
+            <CardsContainer cards=@MiddleCards @ref=@MiddleCardsContainer OnCardsUpdated="HandleCardsUpdated">
         @foreach (var card in MiddleCards)
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
+        </CardsContainer>
         </div>
         <div class="d-flex" style="height: 20%">
+            <CardsContainer cards=@BackCards @ref=@BackCardsContainer OnCardsUpdated="HandleCardsUpdated">
         @foreach (var card in BackCards)
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
+        </CardsContainer>
         </div>
         <div class="d-flex" style="height: 20%">
+            <CardsContainer cards=@DrawCards @ref=@DrawCardsContainer OnCardsUpdated="HandleCardsUpdated">
         @foreach (var card in DrawCards)
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
+        </CardsContainer>
         </div>
         <div class="d-flex" style="height: 20%">
+            <CardsContainer cards=@DiscardCards @ref=@DiscardsCardsContainer OnCardsUpdated="HandleCardsUpdated">
         @foreach (var card in DiscardCards)
         {
             <div class="" style="width:20%;">
             <Card CardModel="card" Style="width: 100%;"  />
             </div>
         }
+        </CardsContainer>
         </div>
     </div>
 
@@ -89,6 +100,12 @@
     List<CardModel> DrawCards = new List<CardModel>();
     List<CardModel> DiscardCards = new List<CardModel>();
 
+    CardsContainer FrontCardsContainer;
+    CardsContainer MiddleCardsContainer;
+    CardsContainer BackCardsContainer;
+    CardsContainer DrawCardsContainer;
+    CardsContainer DiscardsCardsContainer;
+
     CardModel BackCard = new CardModel(-1);
     CardModel EmptyCard = new CardModel(0);
 
@@ -110,5 +127,24 @@
         while (DiscardCards.Count < 4)
             DiscardCards.Add(new CardModel(0));
 
+
+        //FrontCardsContainer.OnCardsUpdated += (x) => {
+
+        //};
+        //FrontCardsContainer.OnCardsUpdated += GCMemoryInfo =>
+        //{
+
+        //};
+    }
+
+    protected override void OnParametersSet()
+    {
+        //Jobs.Clear();
+        //Jobs.AddRange(Container.Jobs.Where(x => x.Status == ListStatus));
+    }
+
+    void HandleCardsUpdated((CardModel CardModel, List<CardModel> Cards) data)
+    {
+        
     }
 }
