@@ -65,19 +65,32 @@ a, .btn-link {
 
 /** Simple drag and drop with Blazor CSS **/
 
+.card {
+    height:100%;
+}
+
+.card img {
+    object-fit: contain;
+    /*object-position: top;*/
+    display: block;
+    height: 100%;
+    /*width: 100%;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fullsuit-container {
+    /*height:100%;*/
+    display:block;
+}
+
+.empty-card {
+    border: 2px dashed green;
+}
+
 .cards-container {
     display: flex;
     justify-content: space-around;
-}
-
-.card-status {
-    display: flex;
-    flex-direction: column;
-    width: 312px;
-}
-
-.job-status ul {
-    flex: 1;
 }
 
 .dropzone {
@@ -106,17 +119,9 @@ a, .btn-link {
     /*width: 250px;*/
 }
 
-    .draggable img {
-        object-fit: contain;
-        object-position: top;
-        display: block;
-        height: 100%;
-        width: 100%;
-    }
-
-    .draggable:active {
-        cursor: grabbing;
-    }
+.draggable:active {
+    cursor: grabbing;
+}
 
 .dragging {
     cursor: grabbing;

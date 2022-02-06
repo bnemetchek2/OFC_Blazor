@@ -1,7 +1,6 @@
-﻿<span class="draggable" draggable="true" id="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" >
+﻿<span class="card draggable" id="@CardModel.CardName" @ondragstart="@(() => HandleDragStart(CardModel))" >
     <RadzenImage Path="@CardModel.ImagePath" Style=@Style class="img-responsive" />
 </span>
-@*<img src="@CardModel.ImagePath" style=@Style class="img-responsive" />*@
 
 @code {
     [CascadingParameter] CardsContainer Container { get; set; }

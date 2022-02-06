@@ -123,11 +123,11 @@
 @code {
     // https://fonts.google.com/icons?selected=Material+Icons
 
-    private string HeroFront { get; set; }
-    private string HeroMiddle { get; set; }
-    private string HeroBack { get; set; }
-    private string HeroDraw { get; set; } = "4d 2d 8s 7s 5s";
-    private string HeroDiscards { get; set; }
+    private string HeroFront { get; set; }= "Ah Ad";
+    private string HeroMiddle { get; set; }= "Kd Kc Ks";
+    private string HeroBack { get; set; }= "ac 2d 3h 4s 5s";
+    private string HeroDraw { get; set; } = "4d 2d 8s 7s";
+    private string HeroDiscards { get; set; } = "Qh Qs Qc Qd";
 
     private string VillainFront { get; set; }
     private string VillainMiddle { get; set; }
@@ -152,36 +152,35 @@
         MoveInfo = "";
         IsBusy = true;
         StateHasChanged();
-        var _ = Task.Run(() => {
-            try
-            {
-                var s_cts = new CancellationTokenSource(1000 * TimeoutSeconds);
-                var results = OFCevaluator.Evaluate(
-                        HeroFront,
-                        HeroMiddle,
-                        HeroBack,
-                        HeroDiscards,
-                        VillainFront,
-                        VillainMiddle,
-                        VillainBack,
-                        "", // Villain discards
-                        HeroDraw,
-                        ProcessorCount,
-                        s_cts.Token
-                        );
+        await Task.Delay(10);
+        try
+        {
+            var s_cts = new CancellationTokenSource(1000 * TimeoutSeconds);
+            var results = OFCevaluator.Evaluate(
+                    HeroFront,
+                    HeroMiddle,
+                    HeroBack,
+                    HeroDiscards,
+                    VillainFront,
+                    VillainMiddle,
+                    VillainBack,
+                    "", // Villain discards
+                    HeroDraw,
+                    ProcessorCount,
+                    s_cts.Token
+                    );
 
-                MoveInfo = results.Summary;
-            }
-            catch (Exception ex)
-            {
+            MoveInfo = results.Summary;
+        }
+        catch (Exception ex)
+        {
 
-            }
-            finally
-            {
-                IsBusy = false;
-                var _ = InvokeAsync(StateHasChanged);
-            }
-    });
+        }
+        finally
+        {
+            IsBusy = false;
+            var _ = InvokeAsync(StateHasChanged);
+        }
     }
 
     void OnSliderChange(dynamic value, string name)
@@ -193,7 +192,13 @@
     public async Task OpenCardSelect()
     {
         await DialogService.OpenAsync<CardSelect>("Select Cards",
-               new Dictionary<string, object>() { { "FrontInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroDraw).ToList() } },
+               new Dictionary<string, object>() { 
+                   { "FrontInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroFront).ToList() },
+                   { "MiddleInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroMiddle).ToList() },
+                   { "BackInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroBack).ToList() },
+                   { "DrawInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroDraw).ToList() },
+                   { "DiscardInts", OFC_Blazor.OFCevaluator.SolverHelper.CardsToInts(HeroDiscards).ToList() },
+               },
                new DialogOptions() { Width = "100vw", Height = "100vh", ShowTitle=true, ShowClose=true });
 
     }

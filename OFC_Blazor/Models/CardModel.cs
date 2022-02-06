@@ -50,6 +50,7 @@ public class CardModel
         }
     }
     public CardPlacement CardPlacement { get; set; }
+    public bool Disabled { get; set; }
 
     public CardModel(int intVal)
     {

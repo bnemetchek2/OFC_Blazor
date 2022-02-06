@@ -1,33 +1,34 @@
 ﻿@page "/FullSuitCards/"
 
-        <div class="d-flex" style="height: 33%">
+<div class = "fullsuit-container">
+    <div class="d-flex" style="height: 33%">
         @foreach (var card in Cards.Skip(0).Take(5))
         {
             <div class="" style="width:20%;">
-            <Card CardModel="card" Style=""  />
+                <Card CardModel="card" Style="width: 100%;" />
             </div>
         }
-        </div>
-        <div class="d-flex" style="height: 33%">
+    </div>
+    <div class="d-flex" style="height: 33%">
         @foreach (var card in Cards.Skip(5).Take(5))
         {
             <div class="" style="width:20%;">
-            <Card CardModel="card" Style="width: 100%;"  />
+                <Card CardModel="card" Style="width: 100%;" />
             </div>
         }
-        </div>
-        <div class="d-flex" style="height: 33%">
+    </div>
+    <div class="d-flex" style="height: 33%">
         @foreach (var card in Cards.Skip(10).Take(3))
         {
             <div class="" style="width:20%;">
-            <Card CardModel="card" Style="width: 100%;"  />
+                <Card CardModel="card" Style="width: 100%;" />
             </div>
         }
         <div class="" style="width:20%;">
-            <Card CardModel="BackCard" Style="width: 100%;"  />
-            </div>
+            <Card CardModel="BackCard" Style="width: 100%;" />
         </div>
-
+    </div>
+</div>
 
 
 @code {
@@ -38,8 +39,8 @@
     List<CardModel> ClubCards = new List<CardModel>();
     List<CardModel> DiamondCards = new List<CardModel>();
     List<CardModel> Cards = new List<CardModel>();
-    CardModel BackCard = new CardModel(-1);
-    CardModel EmptyCard = new CardModel(0);
+    CardModel BackCard = new CardModel(-1){ Disabled = true };
+    CardModel EmptyCard = new CardModel(0) { Disabled = true };
 
     protected override void OnInitialized()
     {

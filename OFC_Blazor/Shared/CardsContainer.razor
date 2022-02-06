@@ -13,11 +13,11 @@
 
     public async Task UpdatecardAsync(CardPlacement newCardPlacement)
     {
-        var task = cards.SingleOrDefault(x => x.IntVal == Payload.IntVal);
+        var card = cards.SingleOrDefault(x => x.IntVal == Payload.IntVal);
 
-        if (task != null)
+        if (card != null)
         {
-            task.CardPlacement = newCardPlacement;
+            card.CardPlacement = newCardPlacement;
             await OnStatusUpdated.InvokeAsync(Payload);
         }
     }
