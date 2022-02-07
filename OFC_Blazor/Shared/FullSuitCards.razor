@@ -33,6 +33,16 @@
 
 @code {
     [Parameter] public string Suit { get; set; }
+    [Parameter] public List<CardModel> DisabledCards { get { return _disabledCards; } set
+        {
+            _disabledCards = value;
+            Cards?.ForEach(card =>
+        {
+                card.Disabled = DisabledCards.Exists(dc => dc.IntVal == card.IntVal);
+                card.Draggable = !card.Disabled;
+            });
+        } }
+    private List<CardModel> _disabledCards;
 
     List<CardModel> SpadeCards = new List<CardModel>();
     List<CardModel> HeartCards = new List<CardModel>();
@@ -55,5 +65,10 @@
             "C" => ClubCards,
             _ => DiamondCards
         };
+        Cards.ForEach(card =>
+        {
+            card.Disabled = DisabledCards.Exists(dc => dc.IntVal == card.IntVal);
+            card.Draggable = !card.Disabled;
+        });
     }
 }

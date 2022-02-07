@@ -1,7 +1,7 @@
 ﻿@if (CardModel.IntVal > 0)
 {
-    <span class="card @draggableClass" id="@CardModel.CardName" AllowDragging=false @ondragstart="@((eventArgs) => HandleDragStart(eventArgs, CardModel))" >
-        <img src="@CardModel.ImagePath" style=@Style class="img-responsive disabled-image" draggable="@allowDragging" />
+    <span class="card" id="@CardModel.CardName" AllowDragging=false @ondragstart="@((eventArgs) => HandleDragStart(eventArgs, CardModel))" >
+        <img src="@CardModel.ImagePath" style=@Style class="img-responsive @disabledClass" draggable="@allowDragging" />
     </span>
 }
 else
@@ -20,7 +20,7 @@ else
     [Parameter] public string Style { get; set; }
     string dropClass = "";
     private string allowDragging => (CardModel?.Draggable ?? false) ? "true" : "false";
-    private string draggableClass => (CardModel?.Draggable ?? false) ? "draggable" : string.Empty;
+    private string disabledClass => (CardModel?.Disabled ?? false) ? "disabled-image" : string.Empty;
 
     private bool HandleDragStart(DragEventArgs eventArgs, CardModel selectedCard)
     {

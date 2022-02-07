@@ -62,16 +62,16 @@
         <RadzenTabs style="height: 100%; width: 100%;" RenderMode="TabRenderMode.Client">
             <Tabs>
                 <RadzenTabsItem Text="♤ Spades">
-                    <FullSuitCards Suit="S" />
+                    <FullSuitCards Suit="S" DisabledCards=SelectedCards />
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="♡ Hearts">
-                    <FullSuitCards Suit="H" />
+                    <FullSuitCards Suit="H" DisabledCards=SelectedCards />
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="♧ Clubs">
-                    <FullSuitCards Suit="C" />
+                    <FullSuitCards Suit="C" DisabledCards=SelectedCards />
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="♢ Diamonds">
-                    <FullSuitCards Suit="D" />
+                    <FullSuitCards Suit="D" DisabledCards=SelectedCards />
                 </RadzenTabsItem>
             </Tabs>
         </RadzenTabs>
@@ -99,6 +99,7 @@
     List<CardModel> BackCards = new List<CardModel>();
     List<CardModel> DrawCards = new List<CardModel>();
     List<CardModel> DiscardCards = new List<CardModel>();
+    List<CardModel> SelectedCards => FrontCards.Concat(MiddleCards).Concat(BackCards).Concat(DrawCards).Concat(DiscardCards).ToList();
 
     CardsContainer FrontCardsContainer;
     CardsContainer MiddleCardsContainer;
@@ -127,14 +128,6 @@
         while (DiscardCards.Count < 4)
             DiscardCards.Add(new CardModel(0));
 
-
-        //FrontCardsContainer.OnCardsUpdated += (x) => {
-
-        //};
-        //FrontCardsContainer.OnCardsUpdated += GCMemoryInfo =>
-        //{
-
-        //};
     }
 
     protected override void OnParametersSet()
@@ -145,6 +138,6 @@
 
     void HandleCardsUpdated((CardModel CardModel, List<CardModel> Cards) data)
     {
-        
+        //InvokeAsync(StateHasChanged);
     }
 }
