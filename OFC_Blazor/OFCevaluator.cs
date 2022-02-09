@@ -7,37 +7,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Collections.Concurrent;
+using BlazorWorker.Core;
+using BlazorWorker.BackgroundServiceFactory;
 
 namespace OFC_Blazor;
 
-public static class OFCevaluator
+public class OFCevaluator
 {
-    static void MonteCarloKernel(
-        int index,              // The global thread index (1D in this case)
+    public (int[] PlayCounts, int[] AccumScores) MonteCarloKernel(
         int numPlays,   // index for where the results will be accumulated
-            int maxNumThreads,
-            int numThreadSamples,
-            int[] p1Cards,
-            int[] p2Cards,
-            int[] cardsRemaining,
-            Random RNG,
-            int[] AccumScores, // results for each play
-            int[] PlayCounts, // number of times each play was evaluated
-            CancellationToken token
+        int[] p1Cards,
+        int[] p2Cards,
+        int[] cardsRemaining,
+        int numSeconds
         )
     {
-        // index for where the results will be accumulated
-        //var netScore = 0;
+        var AccumScores = new int[numPlays]; // results for each play
+        var PlayCounts = new int[numPlays]; // number of times each play was evaluated
+        var RNG = new Random();
+
+        var startTime = DateTime.Now;
 
         var deck = new Deck(cardsRemaining, RNG);
 
-        for (int i = 0; i < numThreadSamples; i++)
+        for (int i = 0; i < int.MaxValue; i++)
         {
-            if (token.IsCancellationRequested)
+            if ((DateTime.Now - startTime).TotalSeconds > numSeconds)
                 break;
-            var resultsIdx = (index + i) % numPlays; // index for where the results will be accumulated
+            var resultsIdx = i % numPlays; // index for where the results will be accumulated
             var playIdx = resultsIdx * 13;
-
 
             deck.Init();
             var p1Hand = new Hand(new SingleHand(p1Cards[playIdx..(playIdx + 3)]), new SingleHand(p1Cards[(playIdx + 3)..(playIdx + 3 + 5)]), new SingleHand(p1Cards[(playIdx + 8)..(playIdx + 8 + 5)]));
@@ -58,7 +56,7 @@ public static class OFCevaluator
                         // error condition
                         if (cards[4] == -1)
                         {
-                            return;
+                            return default;
                         }
                         while (true)
                         {
@@ -81,7 +79,7 @@ public static class OFCevaluator
                         // error condition
                         if (cards[2] == -1)
                         {
-                            return;
+                            return default;
                         }
                         while (true)
                         {
@@ -103,7 +101,7 @@ public static class OFCevaluator
                     // error condition
                     if (cards[2] == -1)
                     {
-                        return;
+                        return default;
                     }
                     var playIds = new byte[3];
                     while (true)
@@ -119,11 +117,12 @@ public static class OFCevaluator
 
             // calculate outcome
             var score = game.hand0.ScoreVersus(game.hand1);
-            Interlocked.Increment(ref PlayCounts[resultsIdx]);
-            Interlocked.Add(ref AccumScores[resultsIdx], score.thisScore - score.otherScore);
+            PlayCounts[resultsIdx]++;
+            AccumScores[resultsIdx] += score.thisScore - score.otherScore;
         }
-
+        return (PlayCounts, AccumScores);
     }
+
 
     // returns HighScorePlay
     static int FantasyKernel(
@@ -1083,9 +1082,11 @@ public static class OFCevaluator
         }
     }
 
-    public static (string Summary, List<(string play, double score)> Plays) Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount, CancellationToken token
+    public static async Task<(string Summary, List<(string play, double score)> Plays)> Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount, 
+        int numSeconds, IWorkerFactory workerFactory
         )
     {
+        await Task.Yield();
         try
         {
             //SolverHelper.SelfTest();
@@ -1222,22 +1223,35 @@ public static class OFCevaluator
 
             var startTime = DateTime.Now;
 
-            Parallel.For(0, maxNumThreads, idx =>
-            {
-                MonteCarloKernel(idx,
-                    numPlays,
-                    maxNumThreads,
-                    numThreadSamples,
-                    p1CardList.ToArray(),
-                    p2CardList.ToArray(),
-                    remainingDeckI,
-                    new Random(),
-                    accumScores,
-                    playCounts,
-                    token
-                    );
-            });
+            var worker = await workerFactory.CreateAsync();
+            var service = await worker.CreateBackgroundServiceAsync<OFCevaluator>();
+            var result = await service.RunAsync(s => s.MonteCarloKernel(
+                        numPlays,
+                        p1CardList.ToArray(),
+                        p2CardList.ToArray(),
+                        remainingDeckI,
+                        numSeconds
+                ));
+
+            //var thisEval = new OFCevaluator();
+            //var result = thisEval.MonteCarloKernel(
+            //    numPlays,
+            //    p1CardList.ToArray(),
+            //    p2CardList.ToArray(),
+            //    remainingDeckI,
+            //    numSeconds
+            //    );
+
+
             var EndTime = DateTime.Now;
+            (playCounts, accumScores) = result;
+
+            //var debugResult = string.Empty;
+            //for (int i = 0; i < accumScores.Length; i++)
+            //{
+            //    debugResult += $"playCounts: {playCounts[i]}  accumScores: {accumScores[i]}" + Environment.NewLine;
+            //}
+            //return (debugResult, null);
 
             var results = Enumerable.Range(0, accumScores.Length).ToList().Select(i =>
             {

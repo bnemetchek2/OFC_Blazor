@@ -1,3 +1,4 @@
+using BlazorWorker.Core;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using OFC_Blazor;
@@ -15,5 +16,7 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddScoped<BrowserService>();
+
+builder.Services.AddWorkerFactory();
 
 await builder.Build().RunAsync();

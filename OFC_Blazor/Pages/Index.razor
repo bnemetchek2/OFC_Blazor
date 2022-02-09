@@ -1,7 +1,10 @@
 ﻿@page "/"
 @using OFC_Blazor
+@using BlazorWorker.Core;
 @inject DialogService DialogService
 @inject Services.BrowserService BrowserService;
+@using BlazorWorker.BackgroundServiceFactory
+@inject IWorkerFactory workerFactory
 
 <PageTitle>OFC Solver</PageTitle>
 
@@ -123,11 +126,11 @@
 @code {
     // https://fonts.google.com/icons?selected=Material+Icons
 
-    private string HeroFront { get; set; }= "Ah Ad";
-    private string HeroMiddle { get; set; }= "Kd Kc Ks";
-    private string HeroBack { get; set; }= "ac 2d 3h 4s";
-    private string HeroDraw { get; set; } = "4d 2d ";
-    private string HeroDiscards { get; set; } = "Qh Qs Qc ";
+    private string HeroFront { get; set; }= "";
+    private string HeroMiddle { get; set; }= "";
+    private string HeroBack { get; set; }= "";
+    private string HeroDraw { get; set; } = "4d 2d 8s 7s 5s";
+    private string HeroDiscards { get; set; } = "";
 
     private string VillainFront { get; set; }
     private string VillainMiddle { get; set; }
@@ -152,11 +155,21 @@
         MoveInfo = "";
         IsBusy = true;
         StateHasChanged();
-        await Task.Delay(10);
+
+        //var s_cts = new CancellationTokenSource(TimeSpan.FromSeconds(TimeoutSeconds));
+        //var s_cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+        //var s_cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(2));
+        //s_cts.Token.Register(
+        //    () =>
+        //    {
+        //    //throw new TimeoutException("read timeout");
+        //});
+
+        await Task.Yield();
+
         try
         {
-            var s_cts = new CancellationTokenSource(1000 * TimeoutSeconds);
-            var results = OFCevaluator.Evaluate(
+            var resultsT = OFCevaluator.Evaluate(
                     HeroFront,
                     HeroMiddle,
                     HeroBack,
@@ -167,9 +180,14 @@
                     "", // Villain discards
                     HeroDraw,
                     ProcessorCount,
-                    s_cts.Token
+                    TimeoutSeconds,
+                    workerFactory
                     );
 
+            //await Task.Delay(1000 * TimeoutSeconds);
+            //s_cts.Cancel();
+
+            var results = await resultsT;
             MoveInfo = results.Summary;
         }
         catch (Exception ex)
