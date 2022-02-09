@@ -1223,16 +1223,54 @@ public class OFCevaluator
 
             var startTime = DateTime.Now;
 
-            var worker = await workerFactory.CreateAsync();
-            var service = await worker.CreateBackgroundServiceAsync<OFCevaluator>();
-            var result = await service.RunAsync(s => s.MonteCarloKernel(
-                        numPlays,
-                        p1CardList.ToArray(),
-                        p2CardList.ToArray(),
-                        remainingDeckI,
-                        numSeconds
-                ));
+            //maxNumThreads = 1;
+            // multiple worker threads
+            var workerTasks = new List<Task<(int[] PlayCounts, int[] AccumScores)>>();
+            for (int i = 0; i < maxNumThreads; i++)
+            {
+                var worker = await workerFactory.CreateAsync();
+                var service = await worker.CreateBackgroundServiceAsync<OFCevaluator>();
+                var task = service.RunAsync(s => s.MonteCarloKernel(
+                            numPlays,
+                            p1CardList.ToArray(),
+                            p2CardList.ToArray(),
+                            remainingDeckI,
+                            numSeconds
+                    ));
+                workerTasks.Add(task);
+            }
+            var workerResults = await Task.WhenAll(workerTasks);
+            for (int i = 0; i < maxNumThreads; i++)
+            {
+                var thisWorkerResult = workerResults[i];
+                for (int j = 0; j < numPlays; j++)
+                {
+                    playCounts[j] += thisWorkerResult.PlayCounts[j];
+                    accumScores[j] += thisWorkerResult.AccumScores[j];
+                }
+            }
 
+            //var debugResult = string.Empty;
+            //for (int j = 0; j < accumScores.Length; j++)
+            //{
+            //    debugResult += $"playCounts: {playCounts[j]}  accumScores: {accumScores[j]}" + Environment.NewLine;
+            //}
+            //return (debugResult, null);
+
+
+            // single worker thread
+            //var worker = await workerFactory.CreateAsync();
+            //var service = await worker.CreateBackgroundServiceAsync<OFCevaluator>();
+            //var result = await service.RunAsync(s => s.MonteCarloKernel(
+            //            numPlays,
+            //            p1CardList.ToArray(),
+            //            p2CardList.ToArray(),
+            //            remainingDeckI,
+            //            numSeconds
+            //    ));
+            //(playCounts, accumScores) = result;
+
+            // GUI thread
             //var thisEval = new OFCevaluator();
             //var result = thisEval.MonteCarloKernel(
             //    numPlays,
@@ -1241,10 +1279,10 @@ public class OFCevaluator
             //    remainingDeckI,
             //    numSeconds
             //    );
+            // (playCounts, accumScores) = result;
 
 
             var EndTime = DateTime.Now;
-            (playCounts, accumScores) = result;
 
             //var debugResult = string.Empty;
             //for (int i = 0; i < accumScores.Length; i++)
