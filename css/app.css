@@ -62,3 +62,94 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+/** Simple drag and drop with Blazor CSS **/
+
+.card {
+    height:100%;
+}
+
+.card img {
+    object-fit: contain;
+    /*object-position: top;*/
+    display: block;
+    height: 100%;
+    /*width: 100%;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.disabled-image {
+    opacity: 30%;
+}
+
+.fullsuit-container {
+    /*height:100%;*/
+    display:block;
+}
+
+.empty-card {
+    border: 2px white;
+    display: block;
+    height: 95%;
+    width: 95%;
+}
+
+.empty-card-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-card {
+    
+}
+
+.cards-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.dropzone {
+    padding: 30px;
+    border: 1px dashed #75868a;
+    list-style: none;
+}
+
+.no-drop {
+    border: 2px dashed red;
+}
+
+.can-drop {
+    border: 2px dashed green;
+    background-color: gray;
+}
+
+.draggable {
+    display: inline-block;
+    margin-bottom: 1px;
+    padding: 2px 2px;
+    /*border: 5px solid #424d5c;*/
+    cursor: grab;
+    /*background: #5c6b7f;*/
+    color: #ffffff;
+    border-radius: 2px;
+    /*width: 250px;*/
+}
+
+.draggable:active {
+    cursor: grabbing;
+}
+
+.dragging {
+    cursor: grabbing;
+}
+
+.almostFullHeight {
+    height: calc(100% - 38px);
+}
+
+.rz-tabview-panel {
+    height: 100%;
+}
