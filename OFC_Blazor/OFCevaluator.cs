@@ -14,26 +14,29 @@ namespace OFC_Blazor;
 
 public class OFCevaluator
 {
-    public (int[] PlayCounts, int[] AccumScores) MonteCarloKernel(
+    public async Task<(int[] PlayCounts, int[] AccumScores)> MonteCarloKernel(
         int numPlays,   // index for where the results will be accumulated
         int[] p1Cards,
         int[] p2Cards,
         int[] cardsRemaining,
-        int numSeconds
+        int numMS
         )
     {
         var AccumScores = new int[numPlays]; // results for each play
         var PlayCounts = new int[numPlays]; // number of times each play was evaluated
         var RNG = new Random();
-
         var startTime = DateTime.Now;
 
         var deck = new Deck(cardsRemaining, RNG);
 
         for (int i = 0; i < int.MaxValue; i++)
         {
-            if ((DateTime.Now - startTime).TotalSeconds > numSeconds)
-                break;
+            if (i % 100 == 0)
+            {
+                await Task.Yield();
+                if ((DateTime.Now - startTime).TotalMilliseconds > numMS)
+                    break;
+            }
             var resultsIdx = i % numPlays; // index for where the results will be accumulated
             var playIdx = resultsIdx * 13;
 
@@ -1082,8 +1085,9 @@ public class OFCevaluator
         }
     }
 
+    public static List<BlazorWorker.WorkerBackgroundService.IWorkerBackgroundService<OFCevaluator>> workerServices = new List<BlazorWorker.WorkerBackgroundService.IWorkerBackgroundService<OFCevaluator>>();
     public static async Task<(string Summary, List<(string play, double score)> Plays)> Evaluate(string p1Front, string p1Middle, string p1Back, string p1Discards, string p2Front, string p2Middle, string p2Back, string p2Discards, string p1Draw, int ProcessorCount, 
-        int numSeconds, IWorkerFactory workerFactory
+        CancellationToken token, int numSeconds, IWorkerFactory workerFactory
         )
     {
         await Task.Yield();
@@ -1222,23 +1226,35 @@ public class OFCevaluator
             var playCounts = new int[numPlays];
 
             var startTime = DateTime.Now;
+            var endTime = startTime.AddSeconds(numSeconds);
 
             //maxNumThreads = 1;
             // multiple worker threads
             var workerTasks = new List<Task<(int[] PlayCounts, int[] AccumScores)>>();
-            for (int i = 0; i < maxNumThreads; i++)
+            
+            if (!workerServices.Any())
             {
-                var worker = await workerFactory.CreateAsync();
-                var service = await worker.CreateBackgroundServiceAsync<OFCevaluator>();
+                for (int i = 0; i < maxNumThreads; i++)
+                {
+                    var worker = await workerFactory.CreateAsync();
+                    var service = await worker.CreateBackgroundServiceAsync<OFCevaluator>();
+                    workerServices.Add(service);
+                }
+            }
+
+            foreach (var service in workerServices)
+            {
                 var task = service.RunAsync(s => s.MonteCarloKernel(
                             numPlays,
                             p1CardList.ToArray(),
                             p2CardList.ToArray(),
                             remainingDeckI,
-                            numSeconds
+                            (int)(endTime - DateTime.Now).TotalMilliseconds
                     ));
+
                 workerTasks.Add(task);
             }
+
             var workerResults = await Task.WhenAll(workerTasks);
             for (int i = 0; i < maxNumThreads; i++)
             {
@@ -1270,16 +1286,16 @@ public class OFCevaluator
             //    ));
             //(playCounts, accumScores) = result;
 
-            // GUI thread
+            //// GUI thread
             //var thisEval = new OFCevaluator();
-            //var result = thisEval.MonteCarloKernel(
+            //var result = await thisEval.MonteCarloKernel(
             //    numPlays,
             //    p1CardList.ToArray(),
             //    p2CardList.ToArray(),
             //    remainingDeckI,
-            //    numSeconds
+            //    (int)(endTime - DateTime.Now).TotalMilliseconds
             //    );
-            // (playCounts, accumScores) = result;
+            //(playCounts, accumScores) = result;
 
 
             var EndTime = DateTime.Now;

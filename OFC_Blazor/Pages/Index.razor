@@ -156,20 +156,20 @@
         IsBusy = true;
         StateHasChanged();
 
-        //var s_cts = new CancellationTokenSource(TimeSpan.FromSeconds(TimeoutSeconds));
+        var s_cts = new CancellationTokenSource(TimeSpan.FromSeconds(TimeoutSeconds));
         //var s_cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
         //var s_cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(2));
-        //s_cts.Token.Register(
-        //    () =>
-        //    {
-        //    //throw new TimeoutException("read timeout");
-        //});
+        s_cts.Token.Register(
+            () =>
+            {
+            //throw new TimeoutException("read timeout");
+        });
 
         await Task.Yield();
 
         try
         {
-            var resultsT = OFCevaluator.Evaluate(
+            var results = await OFCevaluator.Evaluate(
                     HeroFront,
                     HeroMiddle,
                     HeroBack,
@@ -180,6 +180,7 @@
                     "", // Villain discards
                     HeroDraw,
                     ProcessorCount,
+                    s_cts.Token,
                     TimeoutSeconds,
                     workerFactory
                     );
@@ -187,7 +188,7 @@
             //await Task.Delay(1000 * TimeoutSeconds);
             //s_cts.Cancel();
 
-            var results = await resultsT;
+            //var results = await resultsT;
             MoveInfo = results.Summary;
         }
         catch (Exception ex)
