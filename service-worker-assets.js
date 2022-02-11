@@ -5,8 +5,228 @@
       "url": "Cards\/Card_back_06.svg"
     },
     {
+      "hash": "sha256-yjueNbTsTHjx6Qt4ZiZDeGfuQYNSaaqNrEJBEl36b0g=",
+      "url": "Cards\/CLUB-1.svg"
+    },
+    {
+      "hash": "sha256-CFgp1udfuKHFp88lefuzVdCBJ8iVUSzlOIuEeNWfPn8=",
+      "url": "Cards\/CLUB-10.svg"
+    },
+    {
+      "hash": "sha256-+Rd16Y5d9FcEMHU+VLQu86XGJcYx5gB86XR+7Ho1o64=",
+      "url": "Cards\/CLUB-11-JACK.svg"
+    },
+    {
+      "hash": "sha256-uy9uihpKk82qNGog7TNiN3sWkyaOM6lbaU5J4GZQYHo=",
+      "url": "Cards\/CLUB-12-QUEEN.svg"
+    },
+    {
+      "hash": "sha256-9\/tdxvA0h10nKGfRftbP5xJfrkNYYo95Gl+5iEJLtoI=",
+      "url": "Cards\/CLUB-13-KING.svg"
+    },
+    {
+      "hash": "sha256-Ik2hKvnAgiYhaVY9Ce2GZpqrXgsa+WIvkz\/9htxLvDs=",
+      "url": "Cards\/CLUB-2.svg"
+    },
+    {
+      "hash": "sha256-ukg+wTmrI3IfKsVTkOY1S4Ey6z2fq2WK9tsrQBZfujA=",
+      "url": "Cards\/CLUB-3.svg"
+    },
+    {
+      "hash": "sha256-lnhu\/omuLs8VJJuTbeoSvaO6J44AfNOvKMgnPWgu1S8=",
+      "url": "Cards\/CLUB-4.svg"
+    },
+    {
+      "hash": "sha256-esrGdxCymIfTeptaOiNqPQFL6wS6Ze4kUIeJ7WgK6t0=",
+      "url": "Cards\/CLUB-5.svg"
+    },
+    {
+      "hash": "sha256-ofD3Fqb4o1UViTW9MeLCbTCAeOay6cWAhll0sXb8lRQ=",
+      "url": "Cards\/CLUB-6.svg"
+    },
+    {
+      "hash": "sha256-pGlJ28CoavIAqYzko\/Hec16Hm+3ajfCC6vX\/pVIj14c=",
+      "url": "Cards\/CLUB-7.svg"
+    },
+    {
+      "hash": "sha256-+sJHw2QDYzS5VocaqelgqnlCCGFHh5hVVLjkKu3vDQA=",
+      "url": "Cards\/CLUB-8.svg"
+    },
+    {
+      "hash": "sha256-HvGiNp+14k9HEE2vl1P4RG6TvGz4PUTPY8trqFvWCkg=",
+      "url": "Cards\/CLUB-9.svg"
+    },
+    {
+      "hash": "sha256-qJE1tVyV2eDM0J5uNFFORYdBJpCAIYKWSN0vmPX8bCE=",
+      "url": "Cards\/DIAMOND-1.svg"
+    },
+    {
+      "hash": "sha256-KuMOqY9GLoPK4wXz\/XuC0B\/JA6piyoYEN8wFeBRdBc0=",
+      "url": "Cards\/DIAMOND-10.svg"
+    },
+    {
+      "hash": "sha256-\/7pJNwCsti8NjnRf5N2XA0Vgox\/EbEdFV6RXeYdsA0k=",
+      "url": "Cards\/DIAMOND-11-JACK.svg"
+    },
+    {
+      "hash": "sha256-gSGcJGoWnk8RzErCcUJhB8Hp\/Ewkq\/xnAe2d+ZOJUx0=",
+      "url": "Cards\/DIAMOND-12-QUEEN.svg"
+    },
+    {
+      "hash": "sha256-Yu8\/h8i2imazEbF4gVrk1T3rsBcDtC1\/BAhJsjbPo4A=",
+      "url": "Cards\/DIAMOND-13-KING.svg"
+    },
+    {
+      "hash": "sha256-yiDdigvopW+3YAMtnU5wCz5F1zK6dAoW3GX2sdkVfh4=",
+      "url": "Cards\/DIAMOND-2.svg"
+    },
+    {
+      "hash": "sha256-Mva9mCD2xEmQ9IjQC2rUPIDlR\/BMNcWiVkiT6zNnqoM=",
+      "url": "Cards\/DIAMOND-3.svg"
+    },
+    {
+      "hash": "sha256-yT9XR9Llcq99O9XpN4uLhlEK7hTPRz5HsUZp\/RHK9Ak=",
+      "url": "Cards\/DIAMOND-4.svg"
+    },
+    {
+      "hash": "sha256-GRQnAxTVLtz0HWnw9fe\/5EBV038KIphlvSr1LqqwsIk=",
+      "url": "Cards\/DIAMOND-5.svg"
+    },
+    {
+      "hash": "sha256-iljWzW7rDF9ll+8jgkU8qx4dIcz7gnsTl9zwI9qesDg=",
+      "url": "Cards\/DIAMOND-6.svg"
+    },
+    {
+      "hash": "sha256-9aX8kmQcwv6w5z4TEH75ZL1izgvy0e8e+VYbCzUF7Vc=",
+      "url": "Cards\/DIAMOND-7.svg"
+    },
+    {
+      "hash": "sha256-2qc1LUtoI7CJ9I6C8ZKD1GyasUqahZaluP6AVSL7Qco=",
+      "url": "Cards\/DIAMOND-8.svg"
+    },
+    {
+      "hash": "sha256-bMtdGQcUJuv3Fi3fQf0iNzcQIfMWWR6F6frooPjKook=",
+      "url": "Cards\/DIAMOND-9.svg"
+    },
+    {
       "hash": "sha256-kaCzmD8rh49VIAm3iv2G99P86Or\/XIhqfqheGhvpgJI=",
       "url": "Cards\/EmptyCard.svg"
+    },
+    {
+      "hash": "sha256-t4R65Qg1C7kMgBtNRp88TBC7oeXYk+wH4lkFYSF+HOY=",
+      "url": "Cards\/HEART-1.svg"
+    },
+    {
+      "hash": "sha256-\/ntrFNFFUZavG\/X9nPSj4ni\/EKocjlBxFbaSfqdmEfk=",
+      "url": "Cards\/HEART-10.svg"
+    },
+    {
+      "hash": "sha256-BQerCzQZVii0Xr7EJhLsLpnpTjl05PQP\/pU5erVMy+o=",
+      "url": "Cards\/HEART-11-JACK.svg"
+    },
+    {
+      "hash": "sha256-pyvVu1bNUlrczQeCz1Dv1i5F6p3BzI+CYGSpnJu45sI=",
+      "url": "Cards\/HEART-12-QUEEN.svg"
+    },
+    {
+      "hash": "sha256-XVlG8Zkt730RDsSjjq1BUWWZaV1nyfS1aB550p+a14U=",
+      "url": "Cards\/HEART-13-KING.svg"
+    },
+    {
+      "hash": "sha256-AT6kvZjRVH9dh4qV3GyVOD\/Xh2PyheSyzczmZHIm4Cc=",
+      "url": "Cards\/HEART-2.svg"
+    },
+    {
+      "hash": "sha256-oAgwRgMlDDI9m0xkwDNJCfT0FGHSV\/5cZGHaYEIdwwg=",
+      "url": "Cards\/HEART-3.svg"
+    },
+    {
+      "hash": "sha256-klrzuJw5jyQS3s3GPlh5VDO3yx5aVG+R1nKPct5XMTM=",
+      "url": "Cards\/HEART-4.svg"
+    },
+    {
+      "hash": "sha256-JKZksdZn978VuOJUr1+pUE4HFXLt\/GOL+2f7KodqDAA=",
+      "url": "Cards\/HEART-5.svg"
+    },
+    {
+      "hash": "sha256-hYxehYqsoUl8xiqkmlmEvAEzFKBg6VUMuaNCsPo6n+o=",
+      "url": "Cards\/HEART-6.svg"
+    },
+    {
+      "hash": "sha256-YaQ8dCFWWbsPlnDkGHGVAW4at5l2+i9O5eRSRvQSiv8=",
+      "url": "Cards\/HEART-7.svg"
+    },
+    {
+      "hash": "sha256-X5kwIft289+tId4VlROiAleq3On7xaCAuh8ppXxLVMg=",
+      "url": "Cards\/HEART-8.svg"
+    },
+    {
+      "hash": "sha256-xoRmKiQ5Jfw0Tzdug1hwjk05ueZAp90KNm9gJjYZzg4=",
+      "url": "Cards\/HEART-9.svg"
+    },
+    {
+      "hash": "sha256-1m9aihNnfSoSEkSGoPibxrI5eOsUu4lsDOhMySh7\/2g=",
+      "url": "Cards\/JOKER-1.svg"
+    },
+    {
+      "hash": "sha256-Ec7TUUbFu\/vKb0gv+gPtd5dlV3mZKaWWKYTQ0zQhr68=",
+      "url": "Cards\/JOKER-2.svg"
+    },
+    {
+      "hash": "sha256-McqQhBIuNLXWhzpDFOlE0j7JickffOCZndlNnMTM3fE=",
+      "url": "Cards\/JOKER-3.svg"
+    },
+    {
+      "hash": "sha256-oj70PV3SuZK8xmAhs5IlZnWxKJNoF+3TaqRX17XVBvY=",
+      "url": "Cards\/SPADE-1.svg"
+    },
+    {
+      "hash": "sha256-\/8GOIz6zv6cOSUiPwXunjMooRum9eMdqgUhA5SD8K9k=",
+      "url": "Cards\/SPADE-10.svg"
+    },
+    {
+      "hash": "sha256-oLwoTX2HaDIlwXJqGsvBdD\/PRZwXVOQs\/69\/sH0Uoro=",
+      "url": "Cards\/SPADE-11-JACK.svg"
+    },
+    {
+      "hash": "sha256-\/k3MREdeAHOO0Z4sx3fICWM7Fbv+sWQPTiidnVWdPTE=",
+      "url": "Cards\/SPADE-12-QUEEN.svg"
+    },
+    {
+      "hash": "sha256-AyLDXDPntOwTak+uB3Q6vcTkSb4SmuiuEU3tHDtT70k=",
+      "url": "Cards\/SPADE-13-KING.svg"
+    },
+    {
+      "hash": "sha256-pRet0tLBRti+px7\/raMwZBm8vH36eK\/Ljf706118Upk=",
+      "url": "Cards\/SPADE-2.svg"
+    },
+    {
+      "hash": "sha256-NMFNZNx0mSaGgL9hSeuoAhQmXDS6+VVSHj31\/lbUm0s=",
+      "url": "Cards\/SPADE-3.svg"
+    },
+    {
+      "hash": "sha256-IEmoMr9c1RkOvz26YB8voY1QuZpI6Qlsyp9X6Bkot5g=",
+      "url": "Cards\/SPADE-4.svg"
+    },
+    {
+      "hash": "sha256-Ya08BT8TzwmW5R+Cy5nh6fdAfGFmbt1\/6JxdaVay6TM=",
+      "url": "Cards\/SPADE-5.svg"
+    },
+    {
+      "hash": "sha256-vIddv5rjECozZLMe1xLypNPW61tyvc8Y7\/0vZJvB9jw=",
+      "url": "Cards\/SPADE-6.svg"
+    },
+    {
+      "hash": "sha256-+VHx4HnyejF9jkf1PqZEq4nfhTPk2KazMVL6+o9MBIg=",
+      "url": "Cards\/SPADE-7.svg"
+    },
+    {
+      "hash": "sha256-APmA4JU8+eZ3TI7LKjQl2VqrnA0s255cjV\/UUK7NYA4=",
+      "url": "Cards\/SPADE-8.svg"
+    },
+    {
+      "hash": "sha256-BDKxnWL5o7stLMOy3ZiX79uCG15+eWRezPQdIdhlTzU=",
+      "url": "Cards\/SPADE-9.svg"
     },
     {
       "hash": "sha256-f7FwNBq1TbT7bfRM3lbKTZ\/jdorqyozG+z\/\/tafC4xY=",
@@ -69,7 +289,7 @@
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-l9MhiQCdOAuS01kHEakgQd+NqiLYT\/5\/c1i4o4K\/A48=",
+      "hash": "sha256-mb7sniQ6k9f2sVUiFUSoH0OgMOAjPidhgcRysHd99iQ=",
       "url": "index.html"
     },
     {
@@ -513,5 +733,5 @@
       "url": "_content\/Radzen.Blazor\/Radzen.Blazor.js"
     }
   ],
-  "version": "kObTEZDL"
+  "version": "F9LWtVq1"
 };
