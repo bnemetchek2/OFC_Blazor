@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -661,7 +662,7 @@ input {
 }
 
 @media (max-width: 768px) {
-  .rz-sidebar {
+  .rz-sidebar-responsive {
     width: 0;
     opacity: 0;
   }
@@ -699,6 +700,13 @@ input {
 
 .body {
   padding: 1rem;
+}
+
+.rz-body {
+  padding: 1rem;
+}
+
+.rz-layout .rz-body {
   transform: translateZ(0);
 }
 
@@ -928,7 +936,7 @@ input {
   margin: 0;
   min-width: 100%;
   box-shadow: 0 10px 8px 0 rgba(58, 71, 77, 0.06);
-  z-index: 2;
+  z-index: 3;
   border-radius: 2px;
   background-color: #ffffff;
 }
@@ -1174,7 +1182,7 @@ ul.rz-profile-menu {
   background-color: #ffffff;
   border-left: 1px solid #eaeef0;
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 ul.rz-profile-menu .rz-navigation-item-icon-children {
@@ -2261,6 +2269,10 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   position: relative;
 }
 
+.rz-calendar .rz-readonly {
+  cursor: pointer;
+}
+
 .rz-calendar .rz-inputtext {
   width: 100%;
   line-height: 1.5rem;
@@ -2437,6 +2449,16 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   opacity: 0.5;
 }
 
+.rz-datepicker-calendar .rz-datepicker-other-month {
+  opacity: 0.5;
+}
+
+.rz-datepicker-footer {
+  position: relative;
+  line-height: 2.5rem;
+  padding: 0 0.875rem;
+}
+
 .rz-timepicker {
   display: flex;
   align-items: center;
@@ -2491,7 +2513,7 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   background-color: transparent;
   line-height: 1.5rem;
   text-align: inherit;
-  padding: 1px 12px 1px 0.5rem;
+  padding: 1px 18px 1px 0.5rem;
   outline: none;
 }
 
@@ -2945,7 +2967,7 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
 }
 
 .rz-cell-filter {
-  padding: 0.25rem 0.625rem;
+  padding: 0.5rem 0.625rem;
   margin: 0;
   background-color: #f6f8f9;
   border-top: solid 1px #dfe7eb;
@@ -2987,44 +3009,8 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   margin-left: auto;
 }
 
-.rz-cell-filter .rz-cell-filter-label .rz-spinner {
-  border: none;
-  padding: 0;
-  height: auto;
-  background-color: transparent;
-  box-shadow: none;
-  line-height: 1;
-  flex: auto;
-}
-
-.rz-cell-filter .rz-cell-filter-label .rz-spinner input {
-  line-height: 1;
-}
-
-.rz-cell-filter .rz-cell-filter-label .rz-spinner input:focus {
-  outline: none;
-  color: #479cc8;
-}
-
-.rz-cell-filter .rz-cell-filter-label .rz-spinner button {
-  display: none;
-}
-
-.rz-cell-filter .rz-cell-filter-label > input {
-  width: 0;
-  flex: auto;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  background-color: transparent;
-  color: #88989b;
-  font-size: 0.8125rem;
-  line-height: 1;
-}
-
-.rz-cell-filter .rz-cell-filter-label > input:focus {
-  outline: none;
-  color: #479cc8;
+.rz-cell-filter .rz-cell-filter-label .rz-current-filter {
+  margin-left: 0.5rem;
 }
 
 .rz-selectable .rz-datatable-even.rz-state-highlight > td,
@@ -3156,6 +3142,7 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
 
 .rz-apply-filter {
   background-color: #479cc8;
+  color: inherit;
 }
 
 .rz-datatable-loading {
@@ -3374,6 +3361,13 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   background-color: #e6ecef;
   padding: 15px;
   border-bottom: solid 1px #dfe7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rz-group-header-items {
+  margin: 0;
 }
 
 .rz-group-header-item {
@@ -3386,6 +3380,24 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
 
 .rz-group-header-item-title {
   margin-right: 5px;
+}
+
+.rz-group-header-drop {
+  height: fit-content;
+}
+
+.rz-column-picker {
+  display: flex;
+}
+
+.rz-filter-menu-symbol {
+  width: 1.75rem;
+  display: inline-block;
+}
+
+.rz-filter-button {
+  margin-right: 10px;
+  width: 3.5rem;
 }
 
 .rz-paginator {
@@ -3512,10 +3524,12 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
 
 .rz-paginator-page {
   display: inline-block;
+  min-width: 1.75rem;
+  text-align: center;
   margin: 0 0.3125rem;
   background-color: #e6ecef;
   border-radius: 4px;
-  padding: 0.3125rem 0.6875rem;
+  padding: 0.3125rem;
   color: #6d787d;
 }
 
@@ -3523,7 +3537,7 @@ ul.rz-profile-menu .rz-navigation-menu .rz-fileupload-row .rz-paginator-element 
   background-color: #ffffff;
   color: #ff6d41;
   border: 1px solid #e6ecef;
-  padding: 0.25rem 0.625rem;
+  padding: 0.25rem;
 }
 
 .rz-paginator-summary {
@@ -6087,4 +6101,23 @@ button.rz-colorpicker-trigger .rz-fileupload-row .rz-paginator-element .rz-icon-
 
 .rz-layout .rz-footer {
   grid-area: rz-footer;
+}
+
+.rz-breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.rz-breadcrumb-item + .rz-breadcrumb-item::before {
+  content: '»';
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+
+.rz-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
 }

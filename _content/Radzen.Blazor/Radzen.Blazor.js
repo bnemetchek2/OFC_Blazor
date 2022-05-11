@@ -471,20 +471,37 @@ window.Radzen = {
     var uploadComponent =
       Radzen.uploadComponents && Radzen.uploadComponents[fileInput.id];
     if (uploadComponent) {
+      if (uploadComponent.localFiles) {
+        // Clear any previously created preview URL(s)
+        for (var i = 0; i < uploadComponent.localFiles.length; i++) {
+          var file = uploadComponent.localFiles[i];
+          if (file.Url) {
+            URL.revokeObjectURL(file.Url);
+          }
+        }
+      }
+
       uploadComponent.files = Array.from(fileInput.files);
+      uploadComponent.localFiles = files;
       uploadComponent.invokeMethodAsync('RadzenUpload.OnChange', files);
     }
 
     for (var i = 0; i < fileInput.files.length; i++) {
       var file = fileInput.files[i];
-      URL.revokeObjectURL(file.Url);
+      if (file.Url) {
+        URL.revokeObjectURL(file.Url);
+      }
     }
   },
   removeFileFromUpload: function (fileInput, name) {
     var uploadComponent = Radzen.uploadComponents && Radzen.uploadComponents[fileInput.id];
     if (!uploadComponent) return;
     var file = uploadComponent.files.find(function (f) { return f.name == name; })
-    if (!file) return;
+    if (!file) { return; }
+    var localFile = uploadComponent.localFiles.find(function (f) { return f.Name == name; });
+    if (localFile) {
+      URL.revokeObjectURL(localFile.Url);
+    }
     var index = uploadComponent.files.indexOf(file)
     if (index != -1) {
         uploadComponent.files.splice(index, 1);
@@ -493,8 +510,8 @@ window.Radzen = {
   },
   upload: function (fileInput, url, multiple, clear) {
     var uploadComponent = Radzen.uploadComponents && Radzen.uploadComponents[fileInput.id];
-    if(!uploadComponent) return;
-      if (!uploadComponent.files || clear) {
+    if (!uploadComponent) { return; }
+    if (!uploadComponent.files || clear) {
         uploadComponent.files = Array.from(fileInput.files);
     }
     var data = new FormData();
@@ -565,7 +582,7 @@ window.Radzen = {
     if (e.clipboardData) {
       var value = e.clipboardData.getData('text');
 
-      if (value && /^-?\d*\.?\d*$/.test(value)) {
+      if (value && !isNaN(+value)) {
         return;
       }
 
@@ -731,6 +748,7 @@ window.Radzen = {
     }
 
     Radzen[id] = function (e) {
+        if(e.type == 'contextmenu' || !e.target) return;
         if (!/Android/i.test(navigator.userAgent) && e.type == 'resize') {
             Radzen.closePopup(id, instance, callback);
             return;
@@ -843,7 +861,8 @@ window.Radzen = {
         }
     }
   },
-  openDialog: function (options) {
+  openDialog: function (options, dialogService) {
+    Radzen.dialogService = dialogService;
     if (
       document.documentElement.scrollHeight >
       document.documentElement.clientHeight
@@ -866,9 +885,32 @@ window.Radzen = {
             }
         }, 500);
     }
+    if (options.closeDialogOnEsc) {
+        document.removeEventListener('keydown', Radzen.closePopupOrDialog);
+        document.addEventListener('keydown', Radzen.closePopupOrDialog);
+    }
   },
   closeDialog: function () {
     document.body.classList.remove('no-scroll');
+  },
+  closePopupOrDialog: function (e) {
+      e = e || window.event;
+      var isEscape = false;
+      if ("key" in e) {
+          isEscape = (e.key === "Escape" || e.key === "Esc");
+      } else {
+          isEscape = (e.keyCode === 27);
+      }
+      if (isEscape && Radzen.dialogService) {
+          var popups = document.querySelectorAll('.rz-popup,.rz-overlaypanel');
+          for (var i = 0; i < popups.length; i++) {
+              if (popups[i].style.display != 'none') {
+                  return;
+              }
+          }
+
+          Radzen.dialogService.invokeMethodAsync('DialogService.Close', null);
+      }
   },
   getInputValue: function (arg) {
     var input =
@@ -886,7 +928,24 @@ window.Radzen = {
       input.value = value;
     }
   },
-  readFileAsBase64: function (fileInput, maxFileSize) {
+  readFileAsBase64: function (fileInput, maxFileSize, maxWidth, maxHeight) {
+    var calculateWidthAndHeight = function (img) {
+      var width = img.width;
+      var height = img.height;
+      // Change the resizing logic
+      if (width > height) {
+        if (width > maxWidth) {
+          height = height * (maxWidth / width);
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = width * (maxHeight / height);
+          height = maxHeight;
+        }
+      }
+      return { width, height };
+    };
     var readAsDataURL = function (fileInput) {
       return new Promise(function (resolve, reject) {
         var reader = new FileReader();
@@ -897,10 +956,25 @@ window.Radzen = {
         reader.addEventListener(
           'load',
           function () {
-            resolve(reader.result);
+            if (maxWidth > 0 && maxHeight > 0) {
+              var img = document.createElement("img");
+              img.onload = function (event) {
+                // Dynamically create a canvas element
+                var canvas = document.createElement("canvas");
+                var res = calculateWidthAndHeight(img);
+                canvas.width = res.width;
+                canvas.height = res.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, res.width, res.height);
+                resolve(canvas.toDataURL(fileInput.type));
+              }
+              img.src = reader.result;
+            } else {
+              resolve(reader.result);
+            }
           },
           false
-        );
+          );
         var file = fileInput.files[0];
         if (!file) return;
         if (file.size <= maxFileSize) {
