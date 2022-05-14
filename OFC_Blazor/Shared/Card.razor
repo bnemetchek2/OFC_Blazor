@@ -1,17 +1,30 @@
 ﻿@if (CardModel.IntVal > 0)
 {
-    <span class="card" id="@CardModel.CardName" AllowDragging=false @ondragstart="@((eventArgs) => HandleDragStart(eventArgs, CardModel))" >
+    @*<span class="card" id="@CardModel.CardName" AllowDragging=false @ondragstart="@((eventArgs) => HandleDragStart(eventArgs, CardModel))" >
         <img src="@CardModel.ImagePath" style=@Style class="img-responsive @disabledClass" draggable="@allowDragging" />
-    </span>
+    </span>*@
+
+    <div class="card @disabledClass" id="@CardModel.CardName" draggable="@allowDragging" @ondragstart="@((eventArgs) => HandleDragStart(eventArgs, CardModel))" 
+        style="text-align:center;background-image: url(@CardModel.ImagePath); background-size: contain;background-repeat: no-repeat;" />
 }
 else
 {
-    <span class="empty-card-container">
-    <span class="empty-card dropzone @dropClass" ondragover="event.preventDefault();" @ondrop="HandleDrop"
-        @ondragenter="HandleDragEnter"
-        @ondragleave="HandleDragLeave">
-    </span>
-    </span>
+    <div class="card" AllowDragging=false>
+        <span class="empty-card dropzone @dropClass" ondragover="event.preventDefault();" @ondrop="HandleDrop"
+            @ondragenter="HandleDragEnter"
+            @ondragleave="HandleDragLeave">
+        </span>
+
+
+        @*<img src="cards/Card_Empty.svg" alt="" class="empty-card @dropClass img-responsive" ondragover="event.preventDefault();" @ondrop="HandleDrop"
+            @ondragenter="HandleDragEnter"
+            @ondragleave="HandleDragLeave">
+        </img>*@
+
+
+        @*<span style="position: absolute; content: 'Test'; top: 0; bottom: 100%; left: 0; right: 100%; width:100%; height:100%; background-color: #fff;">
+        </span>*@
+    </div>
 }
 
 @code {

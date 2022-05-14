@@ -1,33 +1,22 @@
 ﻿@page "/FullSuitCards/"
 
-<div class = "fullsuit-container">
-    <div class="d-flex" style="height: 33%">
-        @foreach (var card in Cards.Skip(0).Take(5))
-        {
-            <div class="" style="width:20%;">
-                <Card CardModel="card" Style="width: 100%;" />
-            </div>
-        }
-    </div>
-    <div class="d-flex" style="height: 33%">
-        @foreach (var card in Cards.Skip(5).Take(5))
-        {
-            <div class="" style="width:20%;">
-                <Card CardModel="card" Style="width: 100%;" />
-            </div>
-        }
-    </div>
-    <div class="d-flex" style="height: 33%">
-        @foreach (var card in Cards.Skip(10).Take(3))
-        {
-            <div class="" style="width:20%;">
-                <Card CardModel="card" Style="width: 100%;" />
-            </div>
-        }
-        <div class="" style="width:20%;">
-            <Card CardModel="BackCard" Style="width: 100%;" />
-        </div>
-    </div>
+<div class="board-container" style="height: 100%;">
+    @foreach (var card in Cards.Skip(0).Take(5))
+    {
+        <Card CardModel="card" />
+    }
+    @foreach (var card in Cards.Skip(5).Take(5))
+    {
+        <Card CardModel="card"/>
+    }
+    @foreach (var card in Cards.Skip(10).Take(3))
+    {
+        <Card CardModel="card"/>
+    }
+    @*<Card CardModel="BackCard"/>*@
+    @for (var i = 0; i < 12; i++){
+        <div class="no-card"></div>
+    }
 </div>
 
 

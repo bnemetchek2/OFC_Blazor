@@ -66,17 +66,20 @@ a, .btn-link {
 /** Simple drag and drop with Blazor CSS **/
 
 .card {
-    height:100%;
+    /*  height: 100%;
+    width: 100%;*/
+    background-color: transparent;
+    overflow: hidden;
 }
 
 .card img {
     object-fit: contain;
     /*object-position: top;*/
     display: block;
-    height: 100%;
+    /*height: 100%;*/
     /*width: 100%;*/
-    margin-left: auto;
-    margin-right: auto;
+    /*margin-left: auto;
+    margin-right: auto;*/
 }
 
 .disabled-image {
@@ -89,10 +92,12 @@ a, .btn-link {
 }
 
 .empty-card {
-    border: 2px white;
-    display: block;
-    height: 95%;
-    width: 95%;
+    /*border: 2px white;*/
+    /*display: block;*/
+    height: 100%;
+    width: 100%;
+    padding: 30px;
+    background-image: url(/Cards/Card_Empty-2.svg);
 }
 
 .empty-card-container {
@@ -147,9 +152,38 @@ a, .btn-link {
 }
 
 .almostFullHeight {
-    height: calc(100% - 38px);
+    height: calc(100vh - 130px);
+    padding-bottom: 10px;
 }
 
 .rz-tabview-panel {
     height: 100%;
+}
+
+.two-board-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    height: calc(100vh - 130px);
+    padding-bottom: 10px;
+}
+
+.board-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /*grid-template-rows: repeat(5, 1fr);*/
+    gap: 0.5rem;
+}
+
+.board-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /*grid-template-rows: repeat(5, 1fr);*/
+    gap: 0.5rem;
+}
+
+.five-row-item {
+    grid-row: span 2 / auto;
+    /*height: 100%;*/
 }
